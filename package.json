@@ -37,7 +37,7 @@
     "@vitejs/plugin-react": "^5.1.1",
     "ag-grid-community": "^36.1.0",
     "ag-grid-react": "^36.1.0",
-    "electron": "^39.2.6",
+    "electron": "^39.8.10",
     "electron-builder": "^26.0.12",
     "electron-vite": "^5.0.0",
     "eslint": "^9.39.1",
@@ -51,5 +51,11 @@
     "sql-formatter": "^15.6.0",
     "typescript": "^5.9.3",
     "vite": "^7.2.6"
+  },
+  "allowScripts": {
+    "electron": true,
+    "esbuild": true,
+    "fsevents": true,
+    "electron-winstaller": true
   }
 }

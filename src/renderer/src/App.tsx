@@ -146,6 +146,7 @@ function App(): React.JSX.Element {
                   value={sql}
                   onChange={setSql}
                   onExecute={handleExecute}
+                  isExecuting={isExecuting}
                 />
               </div>
 

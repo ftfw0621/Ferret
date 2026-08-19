@@ -5,23 +5,52 @@ interface Props {
   isExecuting: boolean
 }
 
+function bytesToHex(bytes: ArrayLike<number>): string {
+  const parts: string[] = []
+  const len = Math.min(bytes.length, 16) // show first 16 bytes
+  for (let i = 0; i < len; i++) {
+    parts.push(bytes[i].toString(16).padStart(2, '0'))
+  }
+  const hex = parts.join('')
+  return bytes.length > 16 ? `\\x${hex}…` : `\\x${hex}`
+}
+
 function formatBytea(value: unknown): string {
-  // pg driver returns Buffer as { type: 'Buffer', data: number[] } after JSON serialization via IPC
-  if (value && typeof value === 'object') {
-    let bytes: number[] | undefined
+  if (value == null) return 'NULL'
+
+  // Uint8Array or Buffer (structured clone via IPC)
+  if (value instanceof Uint8Array) {
+    return bytesToHex(value)
+  }
+
+  // { type: 'Buffer', data: [...] } (JSON serialized Buffer)
+  if (typeof value === 'object' && !Array.isArray(value)) {
     const obj = value as Record<string, unknown>
     if (obj.type === 'Buffer' && Array.isArray(obj.data)) {
-      bytes = obj.data as number[]
-    } else if (Array.isArray(value)) {
-      bytes = value as number[]
-    }
-    if (bytes) {
-      const hex = bytes.map((b) => b.toString(16).padStart(2, '0')).join('')
-      const display = hex.length > 32 ? hex.slice(0, 32) + '…' : hex
-      return `\\x${display}`
+      return bytesToHex(obj.data as number[])
     }
   }
-  return String(value)
+
+  // Plain number array (contextBridge serialization)
+  if (Array.isArray(value) && value.length > 0 && typeof value[0] === 'number') {
+    return bytesToHex(value)
+  }
+
+  // Already a hex string from pg (e.g. \x0ab7ec...)
+  const str = String(value)
+  if (str.startsWith('\\x')) return str.length > 36 ? str.slice(0, 36) + '…' : str
+
+  return str
+}
+
+function looksLikeBytea(value: unknown): boolean {
+  if (value instanceof Uint8Array) return true
+  if (typeof value === 'object' && value !== null) {
+    const obj = value as Record<string, unknown>
+    if (obj.type === 'Buffer' && Array.isArray(obj.data)) return true
+  }
+  if (Array.isArray(value) && value.length > 0 && typeof value[0] === 'number' && value[0] >= 0 && value[0] <= 255) return true
+  return false
 }
 
 function formatCell(value: unknown, category: string): { text: string; className: string } {
@@ -31,7 +60,8 @@ function formatCell(value: unknown, category: string): { text: string; className
   if (typeof value === 'boolean') {
     return { text: String(value), className: 'cell-bool' }
   }
-  if (category === 'binary') {
+  // Catch binary both by category and by data shape (fallback if category missing)
+  if (category === 'binary' || looksLikeBytea(value)) {
     return { text: formatBytea(value), className: 'cell-binary' }
   }
   if (category === 'number') {

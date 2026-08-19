@@ -7,6 +7,7 @@
 
 import type { DatabaseDriver } from '../interface'
 import type {
+  PostgresConnectionConfig,
   ConnectionConfig,
   ConnectionStatus,
   QueryResult,
@@ -33,18 +34,22 @@ export class PostgresDriver implements DatabaseDriver {
   private pools = new Map<string, PoolEntry>()
 
   async connect(config: ConnectionConfig): Promise<ConnectionStatus> {
+    const pgConfig = config as PostgresConnectionConfig
     try {
+      const sslEnabled = pgConfig.sslMode !== 'disable'
       const pool = new Pool({
-        host: config.host,
-        port: config.port,
-        database: config.database,
-        user: config.username,
-        password: config.password,
+        host: pgConfig.host,
+        port: pgConfig.port,
+        database: pgConfig.database,
+        user: pgConfig.username,
+        password: pgConfig.password,
         max: 5,
         connectionTimeoutMillis: 10_000,
         idleTimeoutMillis: 30_000,
         allowExitOnIdle: true,
-        ssl: config.ssl ? { rejectUnauthorized: false } : false
+        ssl: sslEnabled
+          ? { rejectUnauthorized: pgConfig.sslMode === 'verify-full' || pgConfig.sslMode === 'verify-ca' }
+          : false
       })
 
       // Test the connection
@@ -145,7 +150,8 @@ export class PostgresDriver implements DatabaseDriver {
       const columns: ColumnInfo[] = (result.fields ?? []).map((f: { name: string; dataTypeID: number }) => ({
         name: f.name,
         dataType: this.oidToTypeName(f.dataTypeID),
-        dataTypeId: f.dataTypeID
+        dataTypeId: f.dataTypeID,
+        category: this.oidToCategory(f.dataTypeID)
       }))
 
       return {
@@ -295,5 +301,21 @@ export class PostgresDriver implements DatabaseDriver {
       3802: 'jsonb'
     }
     return map[oid] || `oid:${oid}`
+  }
+
+  /** Map OID to broad category for UI cell rendering */
+  private oidToCategory(oid: number): ColumnInfo['category'] {
+    const numbers = new Set([20, 21, 23, 700, 701, 1700]) // int2/4/8, float4/8, numeric
+    const strings = new Set([25, 1043, 2950, 142])          // text, varchar, uuid, xml
+    const dates = new Set([1082, 1114, 1184])               // date, timestamp, timestamptz
+    const booleans = new Set([16])                          // bool
+    const json = new Set([114, 3802])                       // json, jsonb
+
+    if (numbers.has(oid)) return 'number'
+    if (strings.has(oid)) return 'string'
+    if (dates.has(oid)) return 'date'
+    if (booleans.has(oid)) return 'boolean'
+    if (json.has(oid)) return 'json'
+    return 'other'
   }
 }

@@ -2,7 +2,7 @@
 id: "009"
 title: "创建 Ferret 仓库与项目脚手架"
 type: task
-status: open
+status: closed
 blocked_by: []
 ---
 

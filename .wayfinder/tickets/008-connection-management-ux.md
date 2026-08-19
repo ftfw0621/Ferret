@@ -3,7 +3,7 @@ id: "008"
 title: "连接管理 UX 设计"
 type: grilling
 status: open
-blocked_by: ["003", "006"]
+blocked_by: []
 ---
 
 ## Question

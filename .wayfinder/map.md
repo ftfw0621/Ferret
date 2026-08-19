@@ -25,6 +25,8 @@ A native macOS database client called **Ferret** (雪貂) — built with **Elect
 - [Electron 中 PostgreSQL 连接与查询](tickets/003-postgres-from-electron.md) — **pg in main process + safeStorage**，Pool max 3-5，pg-cursor 流式，contextBridge IPC，完整 schema introspection SQL
 - [查询结果表格渲染方案](tickets/004-result-table-rendering.md) — **AG Grid Community (MIT)**，虚拟滚动、自定义 cell renderer、Dracula 主题映射，clipboard 需自定义 40 行
 - [Ferret 视觉设计语言](tickets/005-visual-identity.md) — **明亮靛蓝紫暗色主题**，6 层背景 (#252546→#4a3a78)，JetBrains Mono + Inter，13px 密集基线，完整 Monaco token 配色
+- [创建 Ferret 仓库与项目脚手架](tickets/009-create-repo-scaffold.md) — **electron-vite scaffold + PG driver + design tokens**，已推送到 `ftfw0621/Ferret`
+- [应用信息架构与布局](tickets/006-app-information-architecture.md) — **DataGrip 双栏布局**，左侧边栏(可折叠)+主区域(编辑器↕结果上下分割)，独立 Tab，点击表名开 SELECT *，精简状态栏
 
 ## Not yet specified
 

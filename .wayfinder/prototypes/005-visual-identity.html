@@ -1,0 +1,1167 @@
+<title>Ferret Design Tokens</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap">
+<style>
+  /* ── Ferret Design Tokens ── */
+  :root {
+    /* Backgrounds — 5 layers, bright dark theme */
+    --f-bg-deep:     #252546;
+    --f-bg-surface:  #2d2d54;
+    --f-bg-card:     #363662;
+    --f-bg-input:    #282848;
+    --f-bg-hover:    #40406e;
+    --f-bg-active:   #4a3a78;
+
+    /* Accent — Dracula purple family */
+    --f-accent:      #BD93F9;
+    --f-accent-soft: #C79FD7;
+    --f-accent-dim:  #9580cc;
+    --f-accent-bg:   #3a2e65;
+
+    /* Status — from Mole's semantic system */
+    --f-ok:          #A5D6A7;
+    --f-ok-bg:       #224832;
+    --f-warn:        #FFD75F;
+    --f-warn-bg:     #484020;
+    --f-danger:      #FF5F5F;
+    --f-danger-bg:   #482020;
+    --f-info:        #7dd3fc;
+    --f-info-bg:     #203a58;
+
+    /* Text hierarchy — bright */
+    --f-text:        #f0f0f5;
+    --f-text-2:      #b2b2cc;
+    --f-text-3:      #8a8aac;
+    --f-text-4:      #686888;
+
+    /* Borders — clearly visible */
+    --f-border:      #464670;
+    --f-border-sub:  #3c3c62;
+    --f-divider:     #555580;
+
+    /* Selection */
+    --f-select-bg:   rgba(189,147,249,.20);
+    --f-select-border: rgba(189,147,249,.50);
+
+    /* Shadows — light for bright bg */
+    --f-shadow-sm:   0 1px 2px rgba(0,0,0,.18);
+    --f-shadow-md:   0 2px 8px rgba(0,0,0,.22);
+    --f-shadow-lg:   0 4px 16px rgba(0,0,0,.28);
+
+    /* Radii */
+    --f-radius-sm:   4px;
+    --f-radius-md:   6px;
+    --f-radius-lg:   8px;
+
+    /* Type scale (compact/dense) */
+    --f-font-ui:     'Inter', system-ui, -apple-system, sans-serif;
+    --f-font-mono:   'JetBrains Mono', ui-monospace, 'SF Mono', monospace;
+    --f-size-xs:     .65rem;
+    --f-size-sm:     .75rem;
+    --f-size-base:   .8125rem;   /* 13px — dense base */
+    --f-size-md:     .875rem;
+    --f-size-lg:     1rem;
+    --f-size-xl:     1.125rem;
+    --f-size-2xl:    1.5rem;
+
+    /* Monaco Editor token colors */
+    --f-token-keyword:   #BD93F9;
+    --f-token-string:    #A5D6A7;
+    --f-token-number:    #FFD75F;
+    --f-token-comment:   #6b6b80;
+    --f-token-type:      #7dd3fc;
+    --f-token-function:  #C79FD7;
+    --f-token-operator:  #FF5F5F;
+    --f-token-variable:  #e2e2e8;
+  }
+
+  /* ── Page reset ── */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #1e1e3a;
+    color: var(--f-text);
+    font-family: var(--f-font-ui);
+    font-size: var(--f-size-base);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── Page layout ── */
+  .page { max-width: 1100px; margin: 0 auto; padding: 2.5rem 1.5rem 4rem; }
+
+  .page-header {
+    display: flex; align-items: center; gap: .75rem;
+    margin-bottom: .5rem;
+  }
+  .page-header h1 {
+    font-family: var(--f-font-mono);
+    font-size: var(--f-size-2xl);
+    font-weight: 600;
+    color: var(--f-accent);
+    letter-spacing: -.03em;
+  }
+  .page-header .emoji { font-size: 1.75rem; }
+  .page-subtitle {
+    color: var(--f-text-3);
+    font-size: var(--f-size-md);
+    margin-bottom: 2.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--f-border);
+  }
+
+  /* ── Section ── */
+  .section { margin-bottom: 3rem; }
+  .section-title {
+    font-size: var(--f-size-lg);
+    font-weight: 600;
+    color: var(--f-accent-soft);
+    margin-bottom: 1rem;
+    display: flex; align-items: center; gap: .5rem;
+  }
+  .section-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--f-border);
+  }
+
+  /* ── Color swatches ── */
+  .swatches {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: .75rem;
+  }
+  .swatch {
+    border-radius: var(--f-radius-md);
+    overflow: hidden;
+    border: 1px solid var(--f-border);
+  }
+  .swatch-color {
+    height: 48px;
+    display: flex; align-items: flex-end; justify-content: flex-end;
+    padding: .25rem .5rem;
+  }
+  .swatch-hex {
+    font-family: var(--f-font-mono);
+    font-size: var(--f-size-xs);
+    color: rgba(255,255,255,.7);
+    text-shadow: 0 1px 2px rgba(0,0,0,.5);
+  }
+  .swatch-label {
+    background: var(--f-bg-card);
+    padding: .4rem .6rem;
+    font-size: var(--f-size-xs);
+    color: var(--f-text-2);
+    font-weight: 500;
+  }
+
+  /* ── Swatch groups ── */
+  .swatch-group { margin-bottom: 1.5rem; }
+  .swatch-group-title {
+    font-size: var(--f-size-sm);
+    font-weight: 600;
+    color: var(--f-text-3);
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    margin-bottom: .5rem;
+  }
+
+  /* ── Typography samples ── */
+  .type-samples {
+    display: flex; flex-direction: column; gap: 1.25rem;
+    background: var(--f-bg-surface);
+    border: 1px solid var(--f-border);
+    border-radius: var(--f-radius-lg);
+    padding: 1.5rem;
+  }
+  .type-row {
+    display: flex; align-items: baseline; gap: 1.5rem;
+  }
+  .type-label {
+    font-family: var(--f-font-mono);
+    font-size: var(--f-size-xs);
+    color: var(--f-text-3);
+    min-width: 100px;
+    flex-shrink: 0;
+  }
+  .type-sample { flex: 1; }
+
+  /* ── Code tokens ── */
+  .code-block {
+    background: var(--f-bg-input);
+    border: 1px solid var(--f-border);
+    border-radius: var(--f-radius-md);
+    padding: 1rem 1.25rem;
+    font-family: var(--f-font-mono);
+    font-size: var(--f-size-sm);
+    line-height: 1.8;
+    overflow-x: auto;
+  }
+  .t-kw { color: var(--f-token-keyword); font-weight: 500; }
+  .t-str { color: var(--f-token-string); }
+  .t-num { color: var(--f-token-number); }
+  .t-cmt { color: var(--f-token-comment); font-style: italic; }
+  .t-type { color: var(--f-token-type); }
+  .t-fn { color: var(--f-token-function); }
+  .t-op { color: var(--f-token-operator); }
+  .t-var { color: var(--f-token-variable); }
+
+  /* ── Component showcase ── */
+  .component-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+  .component-card {
+    background: var(--f-bg-surface);
+    border: 1px solid var(--f-border);
+    border-radius: var(--f-radius-lg);
+    padding: 1.25rem;
+  }
+  .component-label {
+    font-size: var(--f-size-xs);
+    font-weight: 600;
+    color: var(--f-text-3);
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    margin-bottom: .75rem;
+  }
+
+  /* ── Buttons ── */
+  .btn-row { display: flex; gap: .5rem; flex-wrap: wrap; }
+  .btn {
+    font-family: var(--f-font-ui);
+    font-size: var(--f-size-sm);
+    font-weight: 500;
+    padding: .35rem .85rem;
+    border-radius: var(--f-radius-sm);
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition: all .12s;
+  }
+  .btn-primary {
+    background: var(--f-accent);
+    color: #0d0d17;
+  }
+  .btn-primary:hover { background: #caa4ff; }
+  .btn-secondary {
+    background: transparent;
+    border-color: var(--f-border);
+    color: var(--f-text);
+  }
+  .btn-secondary:hover { background: var(--f-bg-hover); border-color: var(--f-text-3); }
+  .btn-danger {
+    background: transparent;
+    border-color: var(--f-danger);
+    color: var(--f-danger);
+  }
+  .btn-danger:hover { background: var(--f-danger-bg); }
+  .btn-ghost {
+    background: transparent;
+    color: var(--f-text-2);
+  }
+  .btn-ghost:hover { color: var(--f-text); background: var(--f-bg-hover); }
+
+  /* ── Form inputs ── */
+  .input-group { display: flex; flex-direction: column; gap: .25rem; margin-bottom: .6rem; }
+  .input-label {
+    font-size: var(--f-size-xs);
+    font-weight: 500;
+    color: var(--f-text-2);
+  }
+  .input-field {
+    background: var(--f-bg-input);
+    border: 1px solid var(--f-border);
+    border-radius: var(--f-radius-sm);
+    padding: .4rem .6rem;
+    font-family: var(--f-font-mono);
+    font-size: var(--f-size-sm);
+    color: var(--f-text);
+    outline: none;
+    transition: border-color .12s;
+  }
+  .input-field:focus { border-color: var(--f-accent); }
+  .input-field::placeholder { color: var(--f-text-4); }
+
+  /* ── Status badges ── */
+  .badge-row { display: flex; gap: .5rem; flex-wrap: wrap; }
+  .badge {
+    font-family: var(--f-font-mono);
+    font-size: var(--f-size-xs);
+    font-weight: 600;
+    padding: .2em .55em;
+    border-radius: var(--f-radius-sm);
+    letter-spacing: .02em;
+  }
+  .badge-ok { color: var(--f-ok); background: var(--f-ok-bg); }
+  .badge-warn { color: var(--f-warn); background: var(--f-warn-bg); }
+  .badge-danger { color: var(--f-danger); background: var(--f-danger-bg); }
+  .badge-info { color: var(--f-info); background: var(--f-info-bg); }
+  .badge-accent { color: var(--f-accent); background: var(--f-accent-bg); }
+
+  /* ── Progress bars (from Mole) ── */
+  .progress-row { display: flex; flex-direction: column; gap: .5rem; }
+  .progress-item { display: flex; align-items: center; gap: .6rem; }
+  .progress-label {
+    font-size: var(--f-size-xs);
+    color: var(--f-text-3);
+    min-width: 40px;
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+  }
+  .progress-bar {
+    flex: 1;
+    height: 6px;
+    background: var(--f-bg-hover);
+    border-radius: 3px;
+    overflow: hidden;
+    position: relative;
+  }
+  .progress-fill {
+    height: 100%;
+    border-radius: 3px;
+    transition: width .3s;
+  }
+
+  /* ══════════════════════════════════════════════
+     MOCK APP — Full Ferret UI preview
+     ══════════════════════════════════════════════ */
+  .mock-app {
+    background: var(--f-bg-deep);
+    border: 1px solid var(--f-border);
+    border-radius: var(--f-radius-lg);
+    overflow: hidden;
+    box-shadow: var(--f-shadow-lg);
+  }
+
+  /* ── Titlebar ── */
+  .mock-titlebar {
+    background: var(--f-bg-surface);
+    border-bottom: 1px solid var(--f-border);
+    padding: .5rem .75rem;
+    display: flex;
+    align-items: center;
+    gap: .6rem;
+  }
+  .traffic-lights {
+    display: flex; gap: 6px;
+  }
+  .traffic-dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+  }
+  .traffic-dot.close { background: #ff5f57; }
+  .traffic-dot.min { background: #febc2e; }
+  .traffic-dot.max { background: #28c840; }
+  .titlebar-text {
+    font-family: var(--f-font-mono);
+    font-size: var(--f-size-xs);
+    color: var(--f-text-3);
+    flex: 1;
+    text-align: center;
+  }
+
+  /* ── App body ── */
+  .mock-body {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    grid-template-rows: 1fr;
+    height: 520px;
+  }
+
+  /* ── Sidebar ── */
+  .mock-sidebar {
+    background: var(--f-bg-surface);
+    border-right: 1px solid var(--f-border);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  .sidebar-header {
+    padding: .6rem .75rem;
+    border-bottom: 1px solid var(--f-border-sub);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .sidebar-title {
+    font-size: var(--f-size-xs);
+    font-weight: 600;
+    color: var(--f-text-3);
+    text-transform: uppercase;
+    letter-spacing: .06em;
+  }
+  .sidebar-add {
+    width: 18px; height: 18px;
+    border-radius: var(--f-radius-sm);
+    border: 1px solid var(--f-border);
+    background: transparent;
+    color: var(--f-text-3);
+    font-size: 11px;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+  }
+  .sidebar-add:hover { background: var(--f-bg-hover); color: var(--f-text); }
+
+  .sidebar-tree {
+    flex: 1;
+    overflow-y: auto;
+    padding: .35rem 0;
+  }
+  .tree-item {
+    padding: .25rem .75rem;
+    font-size: var(--f-size-sm);
+    display: flex;
+    align-items: center;
+    gap: .4rem;
+    cursor: pointer;
+    color: var(--f-text-2);
+    transition: background .1s;
+  }
+  .tree-item:hover { background: var(--f-bg-hover); }
+  .tree-item.active { background: var(--f-bg-active); color: var(--f-text); }
+  .tree-item.active .tree-icon { color: var(--f-accent); }
+  .tree-icon { font-size: .7rem; color: var(--f-text-3); width: 14px; text-align: center; flex-shrink: 0; }
+  .tree-icon.db { color: var(--f-accent-soft); }
+  .tree-indent { width: 14px; flex-shrink: 0; }
+  .tree-chevron { font-size: .6rem; color: var(--f-text-4); width: 10px; text-align: center; flex-shrink: 0; }
+  .conn-dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .conn-dot.connected { background: var(--f-ok); }
+  .conn-dot.disconnected { background: var(--f-text-4); }
+
+  .sidebar-section {
+    padding: .4rem .75rem .2rem;
+    font-size: var(--f-size-xs);
+    font-weight: 600;
+    color: var(--f-text-4);
+    text-transform: uppercase;
+    letter-spacing: .06em;
+  }
+
+  /* ── Main area ── */
+  .mock-main {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  /* ── Tab bar ── */
+  .mock-tabs {
+    background: var(--f-bg-surface);
+    border-bottom: 1px solid var(--f-border);
+    display: flex;
+    align-items: stretch;
+    min-height: 32px;
+  }
+  .tab {
+    padding: .35rem .85rem;
+    font-size: var(--f-size-xs);
+    color: var(--f-text-3);
+    border-right: 1px solid var(--f-border-sub);
+    display: flex;
+    align-items: center;
+    gap: .4rem;
+    cursor: pointer;
+    transition: background .1s;
+    position: relative;
+  }
+  .tab:hover { background: var(--f-bg-hover); color: var(--f-text-2); }
+  .tab.active {
+    color: var(--f-text);
+    background: var(--f-bg-deep);
+  }
+  .tab.active::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--f-accent);
+  }
+  .tab-close {
+    font-size: .55rem;
+    color: var(--f-text-4);
+    cursor: pointer;
+    padding: 1px;
+    border-radius: 2px;
+  }
+  .tab-close:hover { color: var(--f-text); background: var(--f-bg-hover); }
+  .tab-icon { font-size: .65rem; }
+
+  /* ── Editor pane ── */
+  .mock-editor {
+    background: var(--f-bg-input);
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+  }
+  .editor-gutter {
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 36px;
+    background: var(--f-bg-surface);
+    border-right: 1px solid var(--f-border-sub);
+    padding: .5rem 0;
+    font-family: var(--f-font-mono);
+    font-size: var(--f-size-xs);
+    color: var(--f-text-4);
+    text-align: right;
+  }
+  .gutter-line { padding-right: 8px; line-height: 1.7; }
+  .gutter-line.active { color: var(--f-text-2); }
+  .editor-content {
+    flex: 1;
+    padding: .5rem .75rem .5rem 44px;
+    font-family: var(--f-font-mono);
+    font-size: var(--f-size-sm);
+    line-height: 1.7;
+    overflow: auto;
+    white-space: pre;
+  }
+  .editor-cursor {
+    display: inline-block;
+    width: 2px;
+    height: 1.1em;
+    background: var(--f-accent);
+    animation: blink 1s step-end infinite;
+    vertical-align: text-bottom;
+  }
+  @keyframes blink { 50% { opacity: 0; } }
+
+  /* ── Resize handle ── */
+  .resize-handle {
+    height: 3px;
+    background: var(--f-border);
+    cursor: row-resize;
+    position: relative;
+  }
+  .resize-handle::after {
+    content: '⋯';
+    position: absolute;
+    left: 50%; top: 50%;
+    transform: translate(-50%, -50%);
+    font-size: .5rem;
+    color: var(--f-text-4);
+    letter-spacing: 2px;
+  }
+
+  /* ── Result table ── */
+  .mock-results {
+    background: var(--f-bg-deep);
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  .results-toolbar {
+    padding: .3rem .75rem;
+    background: var(--f-bg-surface);
+    border-bottom: 1px solid var(--f-border-sub);
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+    font-size: var(--f-size-xs);
+    color: var(--f-text-3);
+  }
+  .results-toolbar .count { color: var(--f-accent); font-weight: 600; font-family: var(--f-font-mono); }
+  .results-toolbar .timing { color: var(--f-ok); font-family: var(--f-font-mono); }
+
+  .result-table-wrap { flex: 1; overflow: auto; }
+  .result-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: var(--f-font-mono);
+    font-size: var(--f-size-xs);
+    font-variant-numeric: tabular-nums;
+  }
+  .result-table th {
+    position: sticky; top: 0;
+    background: var(--f-bg-card);
+    color: var(--f-text-2);
+    font-weight: 600;
+    text-align: left;
+    padding: .35rem .6rem;
+    border-bottom: 1px solid var(--f-border);
+    white-space: nowrap;
+  }
+  .result-table th .col-type {
+    font-weight: 400;
+    color: var(--f-text-4);
+    margin-left: .3rem;
+  }
+  .result-table td {
+    padding: .3rem .6rem;
+    border-bottom: 1px solid var(--f-border-sub);
+    color: var(--f-text);
+    white-space: nowrap;
+    max-width: 200px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .result-table tr:hover td { background: var(--f-bg-hover); }
+  .result-table .row-num {
+    color: var(--f-text-4);
+    text-align: right;
+    width: 30px;
+    padding-right: .4rem;
+  }
+  .cell-null {
+    color: var(--f-text-4);
+    font-style: italic;
+  }
+  .cell-number { color: var(--f-token-number); }
+  .cell-bool { color: var(--f-accent); }
+  .cell-json {
+    color: var(--f-token-string);
+    cursor: pointer;
+  }
+
+  /* ── Status bar ── */
+  .mock-statusbar {
+    background: var(--f-bg-card);
+    border-top: 1px solid var(--f-border);
+    padding: .2rem .75rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    font-size: var(--f-size-xs);
+    color: var(--f-text-3);
+  }
+  .status-item {
+    display: flex;
+    align-items: center;
+    gap: .3rem;
+  }
+  .status-dot {
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    background: var(--f-ok);
+  }
+  .status-sep { color: var(--f-text-4); }
+
+  /* ── Responsive ── */
+  @media (max-width: 800px) {
+    .component-grid { grid-template-columns: 1fr; }
+    .mock-body { grid-template-columns: 1fr; height: auto; }
+    .mock-sidebar { display: none; }
+    .swatches { grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); }
+  }
+</style>
+
+<div class="page">
+  <!-- Header -->
+  <div class="page-header">
+    <span class="emoji">🦦</span>
+    <h1>Ferret</h1>
+  </div>
+  <p class="page-subtitle">Visual Design Tokens — translated from Mole's dark-theme aesthetic for a desktop database client</p>
+
+  <!-- ═══ COLOR SYSTEM ═══ -->
+  <section class="section">
+    <h2 class="section-title">Color System</h2>
+
+    <div class="swatch-group">
+      <div class="swatch-group-title">Background Layers</div>
+      <div class="swatches">
+        <div class="swatch">
+          <div class="swatch-color" style="background:#252546"><span class="swatch-hex">#252546</span></div>
+          <div class="swatch-label">--f-bg-deep</div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-color" style="background:#2d2d54"><span class="swatch-hex">#2d2d54</span></div>
+          <div class="swatch-label">--f-bg-surface</div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-color" style="background:#363662"><span class="swatch-hex">#363662</span></div>
+          <div class="swatch-label">--f-bg-card</div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-color" style="background:#282848"><span class="swatch-hex">#282848</span></div>
+          <div class="swatch-label">--f-bg-input</div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-color" style="background:#40406e"><span class="swatch-hex">#40406e</span></div>
+          <div class="swatch-label">--f-bg-hover</div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-color" style="background:#4a3a78"><span class="swatch-hex">#4a3a78</span></div>
+          <div class="swatch-label">--f-bg-active</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="swatch-group">
+      <div class="swatch-group-title">Accent — Dracula Purple</div>
+      <div class="swatches">
+        <div class="swatch">
+          <div class="swatch-color" style="background:#BD93F9"><span class="swatch-hex">#BD93F9</span></div>
+          <div class="swatch-label">--f-accent (primary)</div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-color" style="background:#C79FD7"><span class="swatch-hex">#C79FD7</span></div>
+          <div class="swatch-label">--f-accent-soft (titles)</div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-color" style="background:#9580cc"><span class="swatch-hex">#9580cc</span></div>
+          <div class="swatch-label">--f-accent-dim</div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-color" style="background:#3a2e65"><span class="swatch-hex">#3a2e65</span></div>
+          <div class="swatch-label">--f-accent-bg</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="swatch-group">
+      <div class="swatch-group-title">Status Colors</div>
+      <div class="swatches">
+        <div class="swatch">
+          <div class="swatch-color" style="background:#A5D6A7"><span class="swatch-hex">#A5D6A7</span></div>
+          <div class="swatch-label">--f-ok (connected)</div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-color" style="background:#FFD75F"><span class="swatch-hex">#FFD75F</span></div>
+          <div class="swatch-label">--f-warn (slow query)</div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-color" style="background:#FF5F5F"><span class="swatch-hex">#FF5F5F</span></div>
+          <div class="swatch-label">--f-danger (error)</div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-color" style="background:#7dd3fc"><span class="swatch-hex">#7dd3fc</span></div>
+          <div class="swatch-label">--f-info (interactive)</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="swatch-group">
+      <div class="swatch-group-title">Text &amp; Borders</div>
+      <div class="swatches">
+        <div class="swatch">
+          <div class="swatch-color" style="background:#f0f0f5"><span class="swatch-hex">#f0f0f5</span></div>
+          <div class="swatch-label">--f-text (primary)</div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-color" style="background:#b2b2cc"><span class="swatch-hex">#b2b2cc</span></div>
+          <div class="swatch-label">--f-text-2 (secondary)</div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-color" style="background:#8a8aac"><span class="swatch-hex">#8a8aac</span></div>
+          <div class="swatch-label">--f-text-3 (muted)</div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-color" style="background:#464670"><span class="swatch-hex">#464670</span></div>
+          <div class="swatch-label">--f-border</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ TYPOGRAPHY ═══ -->
+  <section class="section">
+    <h2 class="section-title">Typography</h2>
+    <div class="type-samples">
+      <div class="type-row">
+        <div class="type-label">Brand<br>JetBrains Mono 600</div>
+        <div class="type-sample" style="font-family:var(--f-font-mono);font-size:var(--f-size-2xl);font-weight:600;color:var(--f-accent);letter-spacing:-.03em">Ferret</div>
+      </div>
+      <div class="type-row">
+        <div class="type-label">UI Heading<br>Inter 600</div>
+        <div class="type-sample" style="font-family:var(--f-font-ui);font-size:var(--f-size-lg);font-weight:600;color:var(--f-accent-soft)">Connection Settings · Query Results</div>
+      </div>
+      <div class="type-row">
+        <div class="type-label">UI Body<br>Inter 400, 13px</div>
+        <div class="type-sample" style="font-family:var(--f-font-ui);font-size:var(--f-size-base);color:var(--f-text)">Dense, information-rich layout that respects your screen real estate. Every pixel earns its place.</div>
+      </div>
+      <div class="type-row">
+        <div class="type-label">UI Caption<br>Inter 500, 10.4px</div>
+        <div class="type-sample" style="font-family:var(--f-font-ui);font-size:var(--f-size-xs);font-weight:500;color:var(--f-text-2);text-transform:uppercase;letter-spacing:.06em">Connections · Schema · Tables · Columns · Indexes</div>
+      </div>
+      <div class="type-row">
+        <div class="type-label">Code / SQL<br>JetBrains Mono 400, 12px</div>
+        <div class="type-sample" style="font-family:var(--f-font-mono);font-size:var(--f-size-sm);color:var(--f-text)"><span class="t-kw">SELECT</span> <span class="t-var">name</span>, <span class="t-fn">COUNT</span>(<span class="t-op">*</span>) <span class="t-kw">FROM</span> <span class="t-var">users</span> <span class="t-kw">WHERE</span> <span class="t-var">active</span> <span class="t-op">=</span> <span class="t-kw">true</span></div>
+      </div>
+      <div class="type-row">
+        <div class="type-label">Data Cell<br>JetBrains Mono 400, 10.4px</div>
+        <div class="type-sample" style="font-family:var(--f-font-mono);font-size:var(--f-size-xs);font-variant-numeric:tabular-nums">
+          <span style="color:var(--f-text)">alice@example.com</span> &nbsp;
+          <span class="cell-number">42,891</span> &nbsp;
+          <span class="cell-null">NULL</span> &nbsp;
+          <span class="cell-bool">true</span> &nbsp;
+          <span style="color:var(--f-text-2)">2024-03-15T14:22:01Z</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ SQL SYNTAX TOKENS ═══ -->
+  <section class="section">
+    <h2 class="section-title">Monaco Editor Tokens</h2>
+    <div class="code-block"><span class="t-cmt">-- Ferret query: find active users with recent orders</span>
+<span class="t-kw">SELECT</span>
+    u.name,
+    u.email,
+    <span class="t-fn">COUNT</span>(o.id) <span class="t-kw">AS</span> order_count,
+    <span class="t-fn">MAX</span>(o.created_at) <span class="t-kw">AS</span> last_order,
+    <span class="t-fn">SUM</span>(o.total)<span class="t-op">::</span><span class="t-type">numeric</span>(<span class="t-num">10</span>,<span class="t-num">2</span>) <span class="t-kw">AS</span> lifetime_value
+<span class="t-kw">FROM</span> users u
+<span class="t-kw">INNER JOIN</span> orders o <span class="t-kw">ON</span> o.user_id <span class="t-op">=</span> u.id
+<span class="t-kw">WHERE</span> u.active <span class="t-op">=</span> <span class="t-kw">true</span>
+    <span class="t-kw">AND</span> o.created_at <span class="t-op">>=</span> <span class="t-fn">NOW</span>() <span class="t-op">-</span> <span class="t-kw">INTERVAL</span> <span class="t-str">'30 days'</span>
+<span class="t-kw">GROUP BY</span> u.id, u.name, u.email
+<span class="t-kw">HAVING</span> <span class="t-fn">COUNT</span>(o.id) <span class="t-op">></span> <span class="t-num">3</span>
+<span class="t-kw">ORDER BY</span> lifetime_value <span class="t-kw">DESC</span>
+<span class="t-kw">LIMIT</span> <span class="t-num">50</span>;</div>
+  </section>
+
+  <!-- ═══ COMPONENTS ═══ -->
+  <section class="section">
+    <h2 class="section-title">Components</h2>
+    <div class="component-grid">
+      <!-- Buttons -->
+      <div class="component-card">
+        <div class="component-label">Buttons</div>
+        <div class="btn-row">
+          <button class="btn btn-primary">Execute ⌘↵</button>
+          <button class="btn btn-secondary">Export</button>
+          <button class="btn btn-danger">Disconnect</button>
+          <button class="btn btn-ghost">Cancel</button>
+        </div>
+      </div>
+
+      <!-- Status badges -->
+      <div class="component-card">
+        <div class="component-label">Status Badges</div>
+        <div class="badge-row">
+          <span class="badge badge-ok">● Connected</span>
+          <span class="badge badge-warn">⏱ 2.4s</span>
+          <span class="badge badge-danger">✕ Error</span>
+          <span class="badge badge-info">42 rows</span>
+          <span class="badge badge-accent">PostgreSQL 16</span>
+        </div>
+      </div>
+
+      <!-- Form inputs -->
+      <div class="component-card">
+        <div class="component-label">Connection Form</div>
+        <div class="input-group">
+          <label class="input-label">Host</label>
+          <input class="input-field" value="localhost" readonly>
+        </div>
+        <div class="input-group">
+          <label class="input-label">Port</label>
+          <input class="input-field" value="5432" readonly>
+        </div>
+        <div class="input-group">
+          <label class="input-label">Database</label>
+          <input class="input-field" placeholder="Enter database name..." readonly>
+        </div>
+      </div>
+
+      <!-- Progress bars -->
+      <div class="component-card">
+        <div class="component-label">Progress Indicators</div>
+        <div class="progress-row">
+          <div class="progress-item">
+            <span class="progress-label">32%</span>
+            <div class="progress-bar"><div class="progress-fill" style="width:32%;background:var(--f-ok)"></div></div>
+          </div>
+          <div class="progress-item">
+            <span class="progress-label">67%</span>
+            <div class="progress-bar"><div class="progress-fill" style="width:67%;background:var(--f-warn)"></div></div>
+          </div>
+          <div class="progress-item">
+            <span class="progress-label">91%</span>
+            <div class="progress-bar"><div class="progress-fill" style="width:91%;background:var(--f-danger)"></div></div>
+          </div>
+          <div class="progress-item">
+            <span class="progress-label" style="color:var(--f-accent)">Load</span>
+            <div class="progress-bar"><div class="progress-fill" style="width:45%;background:var(--f-accent)"></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ FULL APP MOCK ═══ -->
+  <section class="section">
+    <h2 class="section-title">App Preview</h2>
+
+    <div class="mock-app">
+      <!-- macOS title bar -->
+      <div class="mock-titlebar">
+        <div class="traffic-lights">
+          <div class="traffic-dot close"></div>
+          <div class="traffic-dot min"></div>
+          <div class="traffic-dot max"></div>
+        </div>
+        <span class="titlebar-text">Ferret — production@db.example.com:5432/myapp</span>
+        <span style="width:50px"></span>
+      </div>
+
+      <div class="mock-body">
+        <!-- Sidebar -->
+        <div class="mock-sidebar">
+          <div class="sidebar-header">
+            <span class="sidebar-title">Connections</span>
+            <button class="sidebar-add">+</button>
+          </div>
+          <div class="sidebar-tree">
+            <!-- Connected database -->
+            <div class="tree-item active">
+              <span class="conn-dot connected"></span>
+              <span class="tree-icon db">▥</span>
+              <span>production</span>
+            </div>
+            <div class="sidebar-section">Schema: public</div>
+            <div class="tree-item">
+              <span class="tree-indent"></span>
+              <span class="tree-chevron">▸</span>
+              <span class="tree-icon">◫</span>
+              <span>users</span>
+              <span style="margin-left:auto;font-size:.6rem;color:var(--f-text-4)">12.4k</span>
+            </div>
+            <div class="tree-item" style="background:var(--f-bg-hover)">
+              <span class="tree-indent"></span>
+              <span class="tree-chevron">▾</span>
+              <span class="tree-icon">◫</span>
+              <span>orders</span>
+              <span style="margin-left:auto;font-size:.6rem;color:var(--f-text-4)">842k</span>
+            </div>
+            <div class="tree-item">
+              <span class="tree-indent"></span>
+              <span class="tree-indent"></span>
+              <span class="tree-icon" style="color:var(--f-info);font-size:.55rem">⊕</span>
+              <span style="color:var(--f-text-3)">id</span>
+              <span style="margin-left:auto;font-size:.55rem;color:var(--f-text-4)">int8</span>
+            </div>
+            <div class="tree-item">
+              <span class="tree-indent"></span>
+              <span class="tree-indent"></span>
+              <span class="tree-icon" style="font-size:.55rem">○</span>
+              <span style="color:var(--f-text-3)">user_id</span>
+              <span style="margin-left:auto;font-size:.55rem;color:var(--f-text-4)">int8</span>
+            </div>
+            <div class="tree-item">
+              <span class="tree-indent"></span>
+              <span class="tree-indent"></span>
+              <span class="tree-icon" style="font-size:.55rem">○</span>
+              <span style="color:var(--f-text-3)">total</span>
+              <span style="margin-left:auto;font-size:.55rem;color:var(--f-text-4)">numeric</span>
+            </div>
+            <div class="tree-item">
+              <span class="tree-indent"></span>
+              <span class="tree-indent"></span>
+              <span class="tree-icon" style="font-size:.55rem">○</span>
+              <span style="color:var(--f-text-3)">created_at</span>
+              <span style="margin-left:auto;font-size:.55rem;color:var(--f-text-4)">timestamptz</span>
+            </div>
+            <div class="tree-item">
+              <span class="tree-indent"></span>
+              <span class="tree-chevron">▸</span>
+              <span class="tree-icon">◫</span>
+              <span>products</span>
+              <span style="margin-left:auto;font-size:.6rem;color:var(--f-text-4)">1.2k</span>
+            </div>
+            <div class="tree-item">
+              <span class="tree-indent"></span>
+              <span class="tree-chevron">▸</span>
+              <span class="tree-icon" style="color:var(--f-accent-dim)">◇</span>
+              <span style="color:var(--f-text-3)">active_orders_v</span>
+              <span style="margin-left:auto;font-size:.55rem;color:var(--f-text-4)">view</span>
+            </div>
+
+            <!-- Disconnected database -->
+            <div style="height:.5rem"></div>
+            <div class="tree-item">
+              <span class="conn-dot disconnected"></span>
+              <span class="tree-icon" style="color:var(--f-text-4)">▥</span>
+              <span style="color:var(--f-text-3)">staging</span>
+            </div>
+            <div class="tree-item">
+              <span class="conn-dot disconnected"></span>
+              <span class="tree-icon" style="color:var(--f-text-4)">▥</span>
+              <span style="color:var(--f-text-3)">local-dev</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Main content -->
+        <div class="mock-main">
+          <!-- Tabs -->
+          <div class="mock-tabs">
+            <div class="tab active">
+              <span class="tab-icon" style="color:var(--f-accent)">◆</span>
+              Query 1
+              <span class="tab-close">✕</span>
+            </div>
+            <div class="tab">
+              <span class="tab-icon" style="color:var(--f-text-4)">◇</span>
+              users table
+              <span class="tab-close">✕</span>
+            </div>
+          </div>
+
+          <!-- Editor -->
+          <div class="mock-editor" style="flex: 0 0 140px;">
+            <div class="editor-gutter">
+              <div class="gutter-line active">1</div>
+              <div class="gutter-line">2</div>
+              <div class="gutter-line">3</div>
+              <div class="gutter-line">4</div>
+              <div class="gutter-line">5</div>
+              <div class="gutter-line">6</div>
+            </div>
+            <div class="editor-content"><span class="t-kw">SELECT</span> u.name, u.email, <span class="t-fn">COUNT</span>(o.id)
+<span class="t-kw">FROM</span> users u
+<span class="t-kw">JOIN</span> orders o <span class="t-kw">ON</span> o.user_id <span class="t-op">=</span> u.id
+<span class="t-kw">WHERE</span> o.created_at <span class="t-op">>=</span> <span class="t-str">'2024-01-01'</span>
+<span class="t-kw">GROUP BY</span> u.id
+<span class="t-kw">ORDER BY</span> <span class="t-fn">COUNT</span>(o.id) <span class="t-kw">DESC</span><span class="editor-cursor"></span></div>
+          </div>
+
+          <!-- Resize handle -->
+          <div class="resize-handle"></div>
+
+          <!-- Results -->
+          <div class="mock-results" style="flex: 1;">
+            <div class="results-toolbar">
+              <span>Results</span>
+              <span class="count">248 rows</span>
+              <span class="timing">14ms</span>
+              <span style="margin-left:auto">
+                <button class="btn btn-ghost" style="font-size:.65rem;padding:.15rem .5rem">Export ▾</button>
+              </span>
+            </div>
+            <div class="result-table-wrap">
+              <table class="result-table">
+                <thead>
+                  <tr>
+                    <th class="row-num">#</th>
+                    <th>name <span class="col-type">text</span></th>
+                    <th>email <span class="col-type">text</span></th>
+                    <th>count <span class="col-type">int8</span></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="row-num">1</td>
+                    <td>Alice Chen</td>
+                    <td>alice@example.com</td>
+                    <td class="cell-number">47</td>
+                  </tr>
+                  <tr>
+                    <td class="row-num">2</td>
+                    <td>Bob Martinez</td>
+                    <td>bob.m@company.io</td>
+                    <td class="cell-number">38</td>
+                  </tr>
+                  <tr>
+                    <td class="row-num">3</td>
+                    <td>Carol Wu</td>
+                    <td>carol.wu@startup.dev</td>
+                    <td class="cell-number">31</td>
+                  </tr>
+                  <tr>
+                    <td class="row-num">4</td>
+                    <td>David Kim</td>
+                    <td class="cell-null">NULL</td>
+                    <td class="cell-number">24</td>
+                  </tr>
+                  <tr>
+                    <td class="row-num">5</td>
+                    <td>Eva Johansson</td>
+                    <td>eva.j@nordic.se</td>
+                    <td class="cell-number">19</td>
+                  </tr>
+                  <tr>
+                    <td class="row-num">6</td>
+                    <td>Frank O'Brien</td>
+                    <td>frank@mail.com</td>
+                    <td class="cell-number">15</td>
+                  </tr>
+                  <tr>
+                    <td class="row-num">7</td>
+                    <td>Grace Liu</td>
+                    <td>grace.liu@tech.cn</td>
+                    <td class="cell-number">12</td>
+                  </tr>
+                  <tr>
+                    <td class="row-num">8</td>
+                    <td>Hiro Tanaka</td>
+                    <td>hiro@example.jp</td>
+                    <td class="cell-number">9</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Status bar -->
+          <div class="mock-statusbar">
+            <div class="status-item">
+              <span class="status-dot"></span>
+              production
+            </div>
+            <span class="status-sep">·</span>
+            <span>PostgreSQL 16.2</span>
+            <span class="status-sep">·</span>
+            <span style="font-family:var(--f-font-mono)">public</span>
+            <span style="margin-left:auto;font-family:var(--f-font-mono)">UTF-8</span>
+            <span class="status-sep">·</span>
+            <span style="font-family:var(--f-font-mono)">Ln 6, Col 38</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ TOKEN EXPORT ═══ -->
+  <section class="section">
+    <h2 class="section-title">Token Export</h2>
+    <div class="code-block" style="font-size:var(--f-size-xs);line-height:1.6"><span class="t-cmt">/* Ferret Design Tokens — paste into your CSS or Tailwind config */</span>
+
+<span class="t-cmt">/* Backgrounds — bright dark theme */</span>
+<span class="t-kw">--f-bg-deep</span>:     <span class="t-str">#252546</span>;    <span class="t-cmt">/* app background, main content area */</span>
+<span class="t-kw">--f-bg-surface</span>:  <span class="t-str">#2d2d54</span>;    <span class="t-cmt">/* sidebar, panels, titlebar */</span>
+<span class="t-kw">--f-bg-card</span>:     <span class="t-str">#363662</span>;    <span class="t-cmt">/* cards, elevated surfaces, table header */</span>
+<span class="t-kw">--f-bg-input</span>:    <span class="t-str">#282848</span>;    <span class="t-cmt">/* text inputs, editor background */</span>
+<span class="t-kw">--f-bg-hover</span>:    <span class="t-str">#40406e</span>;    <span class="t-cmt">/* hover state for list items, rows */</span>
+<span class="t-kw">--f-bg-active</span>:   <span class="t-str">#4a3a78</span>;    <span class="t-cmt">/* active/selected, purple-tinted */</span>
+
+<span class="t-cmt">/* Accent */</span>
+<span class="t-kw">--f-accent</span>:      <span class="t-str">#BD93F9</span>;    <span class="t-cmt">/* primary accent, cursor, focus rings */</span>
+<span class="t-kw">--f-accent-soft</span>: <span class="t-str">#C79FD7</span>;    <span class="t-cmt">/* section titles, headings */</span>
+<span class="t-kw">--f-accent-dim</span>:  <span class="t-str">#9580cc</span>;    <span class="t-cmt">/* dimmed accent for less emphasis */</span>
+<span class="t-kw">--f-accent-bg</span>:   <span class="t-str">#3a2e65</span>;    <span class="t-cmt">/* accent background for badges */</span>
+
+<span class="t-cmt">/* Status */</span>
+<span class="t-kw">--f-ok</span>:          <span class="t-str">#A5D6A7</span>;    <span class="t-cmt">/* connected, success, healthy */</span>
+<span class="t-kw">--f-warn</span>:        <span class="t-str">#FFD75F</span>;    <span class="t-cmt">/* slow query, warning */</span>
+<span class="t-kw">--f-danger</span>:      <span class="t-str">#FF5F5F</span>;    <span class="t-cmt">/* error, disconnect, destructive */</span>
+<span class="t-kw">--f-info</span>:        <span class="t-str">#7dd3fc</span>;    <span class="t-cmt">/* interactive, info, type indicators */</span>
+
+<span class="t-cmt">/* Text — bright */</span>
+<span class="t-kw">--f-text</span>:        <span class="t-str">#f0f0f5</span>;    <span class="t-cmt">/* primary text */</span>
+<span class="t-kw">--f-text-2</span>:      <span class="t-str">#b2b2cc</span>;    <span class="t-cmt">/* secondary labels */</span>
+<span class="t-kw">--f-text-3</span>:      <span class="t-str">#8a8aac</span>;    <span class="t-cmt">/* muted, captions */</span>
+<span class="t-kw">--f-text-4</span>:      <span class="t-str">#686888</span>;    <span class="t-cmt">/* disabled, placeholders */</span>
+
+<span class="t-cmt">/* Borders — clearly visible */</span>
+<span class="t-kw">--f-border</span>:      <span class="t-str">#464670</span>;    <span class="t-cmt">/* standard borders */</span>
+<span class="t-kw">--f-border-sub</span>:  <span class="t-str">#3c3c62</span>;    <span class="t-cmt">/* subtle separators */</span>
+<span class="t-kw">--f-divider</span>:     <span class="t-str">#555580</span>;    <span class="t-cmt">/* section dividers */</span>
+
+<span class="t-cmt">/* Monaco Editor */</span>
+<span class="t-kw">--f-token-keyword</span>:   <span class="t-str">#BD93F9</span>;  <span class="t-cmt">/* SELECT, FROM, WHERE */</span>
+<span class="t-kw">--f-token-string</span>:    <span class="t-str">#A5D6A7</span>;  <span class="t-cmt">/* 'string literals' */</span>
+<span class="t-kw">--f-token-number</span>:    <span class="t-str">#FFD75F</span>;  <span class="t-cmt">/* 42, 3.14 */</span>
+<span class="t-kw">--f-token-comment</span>:   <span class="t-str">#6b6b80</span>;  <span class="t-cmt">/* -- comments */</span>
+<span class="t-kw">--f-token-type</span>:      <span class="t-str">#7dd3fc</span>;  <span class="t-cmt">/* int, text, jsonb */</span>
+<span class="t-kw">--f-token-function</span>:  <span class="t-str">#C79FD7</span>;  <span class="t-cmt">/* COUNT, MAX, NOW */</span>
+<span class="t-kw">--f-token-operator</span>:  <span class="t-str">#FF5F5F</span>;  <span class="t-cmt">/* =, >, ::, || */</span></div>
+  </section>
+</div>

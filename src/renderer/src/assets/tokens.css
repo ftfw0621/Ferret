@@ -1,0 +1,80 @@
+/*
+ * Ferret Design Tokens
+ * Bright indigo-purple dark theme — inspired by Mole's visual language
+ *
+ * Usage: import this file in your main CSS/entry point.
+ * Reference tokens via var(--f-*) in all component styles.
+ */
+
+:root {
+  /* ── Backgrounds — 6 layers from deepest to most elevated ── */
+  --f-bg-deep:     #252546;   /* app background, main content area */
+  --f-bg-surface:  #2d2d54;   /* sidebar, panels, titlebar */
+  --f-bg-card:     #363662;   /* cards, elevated surfaces, table header */
+  --f-bg-input:    #282848;   /* text inputs, editor background */
+  --f-bg-hover:    #40406e;   /* hover state for list items, rows */
+  --f-bg-active:   #4a3a78;   /* active/selected, purple-tinted */
+
+  /* ── Accent — Dracula purple family ── */
+  --f-accent:      #BD93F9;   /* primary accent, cursor, focus rings */
+  --f-accent-soft: #C79FD7;   /* section titles, headings */
+  --f-accent-dim:  #9580cc;   /* dimmed accent for less emphasis */
+  --f-accent-bg:   #3a2e65;   /* accent background for badges */
+
+  /* ── Status — semantic colors ── */
+  --f-ok:          #A5D6A7;   /* connected, success, healthy */
+  --f-ok-bg:       #224832;
+  --f-warn:        #FFD75F;   /* slow query, warning */
+  --f-warn-bg:     #484020;
+  --f-danger:      #FF5F5F;   /* error, disconnect, destructive */
+  --f-danger-bg:   #482020;
+  --f-info:        #7dd3fc;   /* interactive, info, type indicators */
+  --f-info-bg:     #203a58;
+
+  /* ── Text hierarchy ── */
+  --f-text:        #f0f0f5;   /* primary text */
+  --f-text-2:      #b2b2cc;   /* secondary labels */
+  --f-text-3:      #8a8aac;   /* muted, captions */
+  --f-text-4:      #686888;   /* disabled, placeholders */
+
+  /* ── Borders ── */
+  --f-border:      #464670;   /* standard borders */
+  --f-border-sub:  #3c3c62;   /* subtle separators */
+  --f-divider:     #555580;   /* section dividers */
+
+  /* ── Selection ── */
+  --f-select-bg:   rgba(189, 147, 249, .20);
+  --f-select-border: rgba(189, 147, 249, .50);
+
+  /* ── Shadows ── */
+  --f-shadow-sm:   0 1px 2px rgba(0, 0, 0, .18);
+  --f-shadow-md:   0 2px 8px rgba(0, 0, 0, .22);
+  --f-shadow-lg:   0 4px 16px rgba(0, 0, 0, .28);
+
+  /* ── Radii ── */
+  --f-radius-sm:   4px;
+  --f-radius-md:   6px;
+  --f-radius-lg:   8px;
+
+  /* ── Typography ── */
+  --f-font-ui:     'Inter', system-ui, -apple-system, sans-serif;
+  --f-font-mono:   'JetBrains Mono', ui-monospace, 'SF Mono', 'Menlo', monospace;
+
+  /* ── Type scale (compact / dense) ── */
+  --f-size-xs:     0.65rem;     /* 10.4px */
+  --f-size-sm:     0.75rem;     /* 12px */
+  --f-size-base:   0.8125rem;   /* 13px — dense base */
+  --f-size-md:     0.875rem;    /* 14px */
+  --f-size-lg:     1rem;        /* 16px */
+  --f-size-xl:     1.125rem;    /* 18px */
+  --f-size-2xl:    1.5rem;      /* 24px */
+
+  /* ── Monaco Editor token colors ── */
+  --f-token-keyword:   #BD93F9;  /* SELECT, FROM, WHERE */
+  --f-token-string:    #A5D6A7;  /* 'string literals' */
+  --f-token-number:    #FFD75F;  /* 42, 3.14 */
+  --f-token-comment:   #686888;  /* -- comments */
+  --f-token-type:      #7dd3fc;  /* int, text, jsonb */
+  --f-token-function:  #C79FD7;  /* COUNT, MAX, NOW */
+  --f-token-operator:  #FF5F5F;  /* =, >, ::, || */
+}

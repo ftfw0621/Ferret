@@ -1,0 +1,136 @@
+/* ── App Layout ── */
+.app-layout {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* ── Sidebar ── */
+.sidebar {
+  background: var(--f-bg-surface);
+  border-right: 1px solid var(--f-border);
+  display: flex;
+  flex-direction: column;
+  /* macOS traffic lights need space */
+  padding-top: 38px;
+  -webkit-app-region: drag;
+}
+
+.sidebar-header {
+  padding: 0.5rem 0.75rem;
+  border-bottom: 1px solid var(--f-border-sub);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  -webkit-app-region: no-drag;
+}
+
+.sidebar-title {
+  font-size: var(--f-size-xs);
+  font-weight: 600;
+  color: var(--f-text-3);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.sidebar-add {
+  width: 20px;
+  height: 20px;
+  border-radius: var(--f-radius-sm);
+  border: 1px solid var(--f-border);
+  background: transparent;
+  color: var(--f-text-3);
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.12s;
+}
+
+.sidebar-add:hover {
+  background: var(--f-bg-hover);
+  color: var(--f-text);
+  border-color: var(--f-accent);
+}
+
+.sidebar-empty {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+  color: var(--f-text-3);
+  font-size: var(--f-size-sm);
+  -webkit-app-region: no-drag;
+}
+
+.sidebar-hint {
+  font-size: var(--f-size-xs);
+  color: var(--f-text-4);
+}
+
+/* ── Main Area ── */
+.main-area {
+  background: var(--f-bg-deep);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  -webkit-app-region: drag;
+}
+
+/* ── Welcome State ── */
+.welcome {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  -webkit-app-region: no-drag;
+}
+
+.welcome-icon {
+  font-size: 3rem;
+  margin-bottom: 0.5rem;
+}
+
+.welcome-title {
+  font-family: var(--f-font-mono);
+  font-size: var(--f-size-2xl);
+  font-weight: 600;
+  color: var(--f-accent);
+  letter-spacing: -0.03em;
+}
+
+.welcome-subtitle {
+  color: var(--f-text-3);
+  font-size: var(--f-size-md);
+}
+
+.welcome-shortcuts {
+  margin-top: 1.5rem;
+  display: flex;
+  gap: 2rem;
+}
+
+.shortcut {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  color: var(--f-text-3);
+  font-size: var(--f-size-xs);
+}
+
+.shortcut kbd {
+  background: var(--f-bg-card);
+  border: 1px solid var(--f-border);
+  border-radius: var(--f-radius-sm);
+  padding: 0.15em 0.4em;
+  font-family: var(--f-font-mono);
+  font-size: var(--f-size-xs);
+  color: var(--f-text-2);
+  box-shadow: var(--f-shadow-sm);
+}

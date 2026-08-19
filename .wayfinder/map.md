@@ -27,6 +27,8 @@ A native macOS database client called **Ferret** (雪貂) — built with **Elect
 - [Ferret 视觉设计语言](tickets/005-visual-identity.md) — **明亮靛蓝紫暗色主题**，6 层背景 (#252546→#4a3a78)，JetBrains Mono + Inter，13px 密集基线，完整 Monaco token 配色
 - [创建 Ferret 仓库与项目脚手架](tickets/009-create-repo-scaffold.md) — **electron-vite scaffold + PG driver + design tokens**，已推送到 `ftfw0621/Ferret`
 - [应用信息架构与布局](tickets/006-app-information-architecture.md) — **DataGrip 双栏布局**，左侧边栏(可折叠)+主区域(编辑器↕结果上下分割)，独立 Tab，点击表名开 SELECT *，精简状态栏
+- [多数据库抽象层设计](tickets/007-multi-db-abstraction.md) — **保留原始类型名 + discriminated union Config + 内部模块**，ColumnCategory 大类做 UI 渲染
+- [连接管理 UX 设计](tickets/008-connection-management-ux.md) — **多连接 + 侧边栏模态弹窗 + 连接字符串解析 + safeStorage + 拖拽排序 + 完整右键菜单**
 
 ## Not yet specified
 

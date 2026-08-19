@@ -5,12 +5,34 @@ interface Props {
   isExecuting: boolean
 }
 
+function formatBytea(value: unknown): string {
+  // pg driver returns Buffer as { type: 'Buffer', data: number[] } after JSON serialization via IPC
+  if (value && typeof value === 'object') {
+    let bytes: number[] | undefined
+    const obj = value as Record<string, unknown>
+    if (obj.type === 'Buffer' && Array.isArray(obj.data)) {
+      bytes = obj.data as number[]
+    } else if (Array.isArray(value)) {
+      bytes = value as number[]
+    }
+    if (bytes) {
+      const hex = bytes.map((b) => b.toString(16).padStart(2, '0')).join('')
+      const display = hex.length > 32 ? hex.slice(0, 32) + '…' : hex
+      return `\\x${display}`
+    }
+  }
+  return String(value)
+}
+
 function formatCell(value: unknown, category: string): { text: string; className: string } {
   if (value === null || value === undefined) {
     return { text: 'NULL', className: 'cell-null' }
   }
   if (typeof value === 'boolean') {
     return { text: String(value), className: 'cell-bool' }
+  }
+  if (category === 'binary') {
+    return { text: formatBytea(value), className: 'cell-binary' }
   }
   if (category === 'number') {
     return { text: String(value), className: 'cell-number' }

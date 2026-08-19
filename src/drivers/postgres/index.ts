@@ -284,38 +284,55 @@ export class PostgresDriver implements DatabaseDriver {
   private oidToTypeName(oid: number): string {
     const map: Record<number, string> = {
       16: 'bool',
+      17: 'bytea',
       20: 'int8',
       21: 'int2',
       23: 'int4',
       25: 'text',
+      26: 'oid',
       114: 'json',
       142: 'xml',
       700: 'float4',
       701: 'float8',
+      790: 'money',
+      1042: 'bpchar',
       1043: 'varchar',
       1082: 'date',
+      1083: 'time',
       1114: 'timestamp',
       1184: 'timestamptz',
+      1186: 'interval',
+      1266: 'timetz',
+      1560: 'bit',
+      1562: 'varbit',
       1700: 'numeric',
       2950: 'uuid',
-      3802: 'jsonb'
+      3802: 'jsonb',
+      3904: 'int4range',
+      3906: 'numrange',
+      3908: 'tsrange',
+      3910: 'tstzrange',
+      3912: 'daterange',
+      3926: 'int8range'
     }
     return map[oid] || `oid:${oid}`
   }
 
   /** Map OID to broad category for UI cell rendering */
   private oidToCategory(oid: number): ColumnInfo['category'] {
-    const numbers = new Set([20, 21, 23, 700, 701, 1700]) // int2/4/8, float4/8, numeric
-    const strings = new Set([25, 1043, 2950, 142])          // text, varchar, uuid, xml
-    const dates = new Set([1082, 1114, 1184])               // date, timestamp, timestamptz
-    const booleans = new Set([16])                          // bool
-    const json = new Set([114, 3802])                       // json, jsonb
+    const numbers = new Set([20, 21, 23, 26, 700, 701, 790, 1700]) // int2/4/8, oid, float4/8, money, numeric
+    const strings = new Set([25, 1042, 1043, 2950, 142, 1186])    // text, bpchar, varchar, uuid, xml, interval
+    const dates = new Set([1082, 1083, 1114, 1184, 1266])          // date, time, timestamp, timestamptz, timetz
+    const booleans = new Set([16])                                 // bool
+    const json = new Set([114, 3802])                              // json, jsonb
+    const binary = new Set([17])                                   // bytea
 
     if (numbers.has(oid)) return 'number'
     if (strings.has(oid)) return 'string'
     if (dates.has(oid)) return 'date'
     if (booleans.has(oid)) return 'boolean'
     if (json.has(oid)) return 'json'
+    if (binary.has(oid)) return 'binary'
     return 'other'
   }
 }

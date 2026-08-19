@@ -267,6 +267,12 @@
   cursor: pointer;
 }
 
+.cell-binary {
+  color: var(--f-text-3);
+  font-size: var(--f-size-xs);
+  letter-spacing: 0.02em;
+}
+
 /* ── Result Empty/Error States ── */
 .result-empty {
   flex: 1;

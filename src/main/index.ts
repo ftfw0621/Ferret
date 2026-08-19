@@ -18,7 +18,7 @@ function createWindow(): void {
     show: false,
     titleBarStyle: 'hiddenInset',
     trafficLightPosition: { x: 12, y: 12 },
-    backgroundColor: '#1c1a18', // --f-bg-deep (warm dark)
+    backgroundColor: '#1e2636', // --f-bg-deep (slate blue)
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'),
       sandbox: false

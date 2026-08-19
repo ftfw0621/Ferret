@@ -1,55 +1,55 @@
 /*
  * Ferret Design Tokens
- * Cool dark slate-blue theme — inspired by Mole Mac clean page
+ * Deep navy blue theme — matched to Mole Mac exact palette
  *
  * Usage: import this file in your main CSS/entry point.
  * Reference tokens via var(--f-*) in all component styles.
  */
 
 :root {
-  /* ── Backgrounds — cool dark slate-blue layers ── */
-  --f-bg-deep:     #1e2636;   /* app background — deep navy slate */
-  --f-bg-surface:  #263040;   /* sidebar, panels, tab bar */
-  --f-bg-card:     #2e3848;   /* cards, elevated, table header */
-  --f-bg-input:    #1a2230;   /* text inputs, editor background */
-  --f-bg-hover:    #344050;   /* hover state for list items, rows */
-  --f-bg-active:   #3a4858;   /* active/selected */
+  /* ── Backgrounds — deep navy blue (extracted from Mole Mac) ── */
+  --f-bg-deep:     #111c34;   /* app background — deep navy */
+  --f-bg-surface:  #162040;   /* sidebar, panels — slightly lighter navy */
+  --f-bg-card:     #1c2848;   /* cards, elevated, table header */
+  --f-bg-input:    #0e1828;   /* text inputs, editor — darkest */
+  --f-bg-hover:    #243050;   /* hover state */
+  --f-bg-active:   #2c3a5c;   /* active/selected */
 
-  /* ── Accent — teal-blue (from Mole Mac buttons) ── */
+  /* ── Accent — teal-blue ── */
   --f-accent:      #4a9ab8;   /* primary accent — teal blue */
-  --f-accent-soft: #6ab8d4;   /* lighter accent for titles, links */
+  --f-accent-soft: #6ab8d4;   /* lighter accent for titles */
   --f-accent-dim:  #3a7a96;   /* dimmed accent */
-  --f-accent-bg:   rgba(74, 154, 184, .12);  /* accent background */
+  --f-accent-bg:   rgba(74, 154, 184, .12);
 
   /* ── Status ── */
   --f-ok:          #4aaa8a;   /* connected, success — teal green */
-  --f-ok-bg:       #1e2e28;
-  --f-warn:        #d4a44a;   /* slow query, warning — warm gold */
-  --f-warn-bg:     #2e2820;
-  --f-danger:      #d45a5a;   /* error, disconnect */
-  --f-danger-bg:   #2e2024;
-  --f-info:        #4a9ab8;   /* interactive, info — same as accent */
+  --f-ok-bg:       #122820;
+  --f-warn:        #d4a44a;   /* slow query — warm gold */
+  --f-warn-bg:     #1e1c10;
+  --f-danger:      #d45a5a;   /* error */
+  --f-danger-bg:   #1e1214;
+  --f-info:        #4a9ab8;
   --f-info-bg:     rgba(74, 154, 184, .12);
 
-  /* ── Text hierarchy — cool blue-gray ── */
-  --f-text:        #e8ecf2;   /* primary text — bright cool white */
-  --f-text-2:      #8a96a8;   /* secondary labels — muted blue-gray */
-  --f-text-3:      #5a6878;   /* muted, captions */
-  --f-text-4:      #404a58;   /* disabled, placeholders */
+  /* ── Text hierarchy ── */
+  --f-text:        #dce4f0;   /* primary — cool off-white */
+  --f-text-2:      #7888a0;   /* secondary — blue-gray */
+  --f-text-3:      #4e5e78;   /* muted */
+  --f-text-4:      #364058;   /* disabled, placeholders */
 
-  /* ── Borders — cool subtle ── */
-  --f-border:      #354050;   /* standard borders */
-  --f-border-sub:  #2a3444;   /* subtle separators */
-  --f-divider:     #404a5a;   /* section dividers */
+  /* ── Borders ── */
+  --f-border:      #243050;   /* standard borders — matches hover */
+  --f-border-sub:  #1c2640;   /* subtle separators */
+  --f-divider:     #2c3858;   /* section dividers */
 
   /* ── Selection ── */
   --f-select-bg:   rgba(74, 154, 184, .18);
   --f-select-border: rgba(74, 154, 184, .40);
 
   /* ── Shadows ── */
-  --f-shadow-sm:   0 1px 2px rgba(0, 0, 0, .25);
-  --f-shadow-md:   0 2px 8px rgba(0, 0, 0, .30);
-  --f-shadow-lg:   0 4px 16px rgba(0, 0, 0, .35);
+  --f-shadow-sm:   0 1px 2px rgba(0, 0, 0, .35);
+  --f-shadow-md:   0 2px 8px rgba(0, 0, 0, .40);
+  --f-shadow-lg:   0 4px 16px rgba(0, 0, 0, .50);
 
   /* ── Radii ── */
   --f-radius-sm:   4px;
@@ -61,21 +61,21 @@
   --f-font-serif:  Charter, Georgia, 'Source Han Serif SC', 'Noto Serif CJK SC', 'Songti SC', Palatino, serif;
   --f-font-mono:   'JetBrains Mono', 'Fira Code', 'SF Mono', Consolas, Monaco, monospace;
 
-  /* ── Type scale (compact / dense) ── */
-  --f-size-xs:     0.65rem;     /* 10.4px */
-  --f-size-sm:     0.75rem;     /* 12px */
-  --f-size-base:   0.8125rem;   /* 13px — dense base */
-  --f-size-md:     0.875rem;    /* 14px */
-  --f-size-lg:     1rem;        /* 16px */
-  --f-size-xl:     1.125rem;    /* 18px */
-  --f-size-2xl:    1.5rem;      /* 24px */
+  /* ── Type scale ── */
+  --f-size-xs:     0.65rem;
+  --f-size-sm:     0.75rem;
+  --f-size-base:   0.8125rem;
+  --f-size-md:     0.875rem;
+  --f-size-lg:     1rem;
+  --f-size-xl:     1.125rem;
+  --f-size-2xl:    1.5rem;
 
-  /* ── Monaco Editor token colors (cool dark bg) ── */
-  --f-token-keyword:   #6ab8d4;  /* SELECT, FROM, WHERE — teal */
-  --f-token-string:    #4aaa8a;  /* 'string literals' — green */
-  --f-token-number:    #d4a44a;  /* 42, 3.14 — warm gold */
-  --f-token-comment:   #5a6878;  /* -- comments — muted */
-  --f-token-type:      #8aaace;  /* int, text, jsonb — soft blue */
-  --f-token-function:  #c8a0d8;  /* COUNT, MAX, NOW — soft purple */
-  --f-token-operator:  #d45a5a;  /* =, >, ::, || — warm red */
+  /* ── Monaco Editor tokens ── */
+  --f-token-keyword:   #6ab8d4;  /* SELECT — teal */
+  --f-token-string:    #4aaa8a;  /* 'strings' — green */
+  --f-token-number:    #d4a44a;  /* numbers — gold */
+  --f-token-comment:   #4e5e78;  /* comments — muted */
+  --f-token-type:      #8aaace;  /* types — soft blue */
+  --f-token-function:  #c8a0d8;  /* functions — soft purple */
+  --f-token-operator:  #d45a5a;  /* operators — red */
 }

@@ -4,9 +4,9 @@ import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
 import { PostgresDriver } from '../drivers/postgres'
 import { IPC_CHANNELS } from '../shared/types'
+import { loadConnections, saveConnections, deleteConnection } from './connections'
 import type { ConnectionConfig } from '../shared/types'
 
-// Initialize the PostgreSQL driver
 const pgDriver = new PostgresDriver()
 
 function createWindow(): void {
@@ -18,7 +18,7 @@ function createWindow(): void {
     show: false,
     titleBarStyle: 'hiddenInset',
     trafficLightPosition: { x: 12, y: 12 },
-    backgroundColor: '#252546', // --f-bg-deep
+    backgroundColor: '#252546',
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'),
       sandbox: false
@@ -41,10 +41,39 @@ function createWindow(): void {
   }
 }
 
-// ── IPC Handlers ──
-
 function registerIpcHandlers(): void {
-  // Connection
+  // ── Connection persistence ──
+  ipcMain.handle(IPC_CHANNELS.LIST_CONNECTIONS, async () => {
+    return loadConnections()
+  })
+
+  ipcMain.handle(IPC_CHANNELS.SAVE_CONNECTION, async (_event, config: ConnectionConfig) => {
+    const all = loadConnections()
+    const idx = all.findIndex((c) => c.id === config.id)
+    if (idx >= 0) {
+      all[idx] = config
+    } else {
+      all.push(config)
+    }
+    saveConnections(all)
+    return { ok: true }
+  })
+
+  ipcMain.handle(IPC_CHANNELS.DELETE_CONNECTION, async (_event, id: string) => {
+    deleteConnection(id)
+    return { ok: true }
+  })
+
+  ipcMain.handle(IPC_CHANNELS.REORDER_CONNECTIONS, async (_event, ids: string[]) => {
+    const all = loadConnections()
+    const ordered = ids
+      .map((id) => all.find((c) => c.id === id))
+      .filter(Boolean) as ConnectionConfig[]
+    saveConnections(ordered)
+    return { ok: true }
+  })
+
+  // ── Database operations ──
   ipcMain.handle(IPC_CHANNELS.CONNECT, async (_event, config: ConnectionConfig) => {
     return pgDriver.connect(config)
   })
@@ -57,7 +86,6 @@ function registerIpcHandlers(): void {
     return pgDriver.testConnection(config)
   })
 
-  // Query
   ipcMain.handle(
     IPC_CHANNELS.EXECUTE_QUERY,
     async (_event, connectionId: string, sql: string, params?: unknown[]) => {
@@ -69,7 +97,6 @@ function registerIpcHandlers(): void {
     return pgDriver.cancelQuery(connectionId)
   })
 
-  // Schema
   ipcMain.handle(IPC_CHANNELS.GET_SCHEMAS, async (_event, connectionId: string) => {
     return pgDriver.getSchemas(connectionId)
   })
@@ -88,8 +115,6 @@ function registerIpcHandlers(): void {
     }
   )
 }
-
-// ── App lifecycle ──
 
 app.whenReady().then(() => {
   electronApp.setAppUserModelId('com.ftfw.ferret')

@@ -115,6 +115,7 @@ export const IPC_CHANNELS = {
   LIST_CONNECTIONS: 'db:list-connections',
   SAVE_CONNECTION: 'db:save-connection',
   DELETE_CONNECTION: 'db:delete-connection',
+  REORDER_CONNECTIONS: 'db:reorder-connections',
 
   // Query
   EXECUTE_QUERY: 'db:execute-query',

@@ -3,9 +3,21 @@ import { electronAPI } from '@electron-toolkit/preload'
 import { IPC_CHANNELS } from '../shared/types'
 import type { ConnectionConfig } from '../shared/types'
 
-// Ferret database API exposed to renderer via contextBridge
 const ferretAPI = {
-  // Connection
+  // Connection persistence
+  listConnections: () =>
+    ipcRenderer.invoke(IPC_CHANNELS.LIST_CONNECTIONS),
+
+  saveConnection: (config: ConnectionConfig) =>
+    ipcRenderer.invoke(IPC_CHANNELS.SAVE_CONNECTION, config),
+
+  deleteConnection: (id: string) =>
+    ipcRenderer.invoke(IPC_CHANNELS.DELETE_CONNECTION, id),
+
+  reorderConnections: (ids: string[]) =>
+    ipcRenderer.invoke(IPC_CHANNELS.REORDER_CONNECTIONS, ids),
+
+  // Database operations
   connect: (config: ConnectionConfig) =>
     ipcRenderer.invoke(IPC_CHANNELS.CONNECT, config),
 

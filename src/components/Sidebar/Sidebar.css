@@ -62,8 +62,9 @@
 .tunnel-icon { font-size: 0.65rem; color: var(--f-text-4); }
 .conn-action {
   background: none; border: none; cursor: pointer;
-  font-size: 0.55rem; padding: 0 0.25rem; border-radius: var(--f-radius-sm);
-  color: var(--f-text-4); line-height: 1; width: 1rem; text-align: center;
+  font-size: 0.65rem; padding: 0.15rem 0.35rem; border-radius: var(--f-radius-sm);
+  color: var(--f-text-4); line-height: 1; text-align: center;
+  -webkit-app-region: no-drag;
 }
 .conn-action.connect { color: var(--f-ok); }
 .conn-action:hover { background: var(--f-bg-hover); color: var(--f-text); }

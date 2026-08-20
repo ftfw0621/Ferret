@@ -9,7 +9,7 @@ loader.config({ monaco })
 interface Props {
   value: string
   onChange: (value: string) => void
-  onExecute: () => void
+  onExecute: (sql: string) => void
   isExecuting?: boolean
 }
 
@@ -33,8 +33,8 @@ const FERRET_THEME: Monaco.editor.IStandaloneThemeData = {
     'editor.background': '#191614',
     'editor.foreground': '#e8e0d8',
     'editor.lineHighlightBackground': '#211e1c',
-    'editor.selectionBackground': '#c0705018',
-    'editor.inactiveSelectionBackground': '#c0705008',
+    'editor.selectionBackground': '#c0705048',
+    'editor.inactiveSelectionBackground': '#c0705028',
     'editorCursor.foreground': '#c07050',
     'editorLineNumber.foreground': '#585048',
     'editorLineNumber.activeForeground': '#a89e96',
@@ -56,6 +56,19 @@ const FERRET_THEME: Monaco.editor.IStandaloneThemeData = {
 
 export function QueryEditor({ value, onChange, onExecute, isExecuting }: Props) {
   const editorRef = useRef<Monaco.editor.IStandaloneCodeEditor | null>(null)
+  const onExecuteRef = useRef(onExecute)
+  onExecuteRef.current = onExecute
+
+  /** Return selected text if any, otherwise the full editor content. */
+  const getExecutableSQL = useCallback((): string => {
+    const editor = editorRef.current
+    if (!editor) return value
+    const selection = editor.getSelection()
+    if (selection && !selection.isEmpty()) {
+      return editor.getModel()?.getValueInRange(selection) ?? value
+    }
+    return value
+  }, [value])
 
   const handleMount: OnMount = useCallback((editor, monacoInstance) => {
     editorRef.current = editor
@@ -64,19 +77,22 @@ export function QueryEditor({ value, onChange, onExecute, isExecuting }: Props) 
     monacoInstance.editor.defineTheme('ferret', FERRET_THEME)
     monacoInstance.editor.setTheme('ferret')
 
-    // ⌘+Enter to execute
+    // ⌘+Enter to execute (uses ref to always have latest onExecute)
     editor.addAction({
       id: 'ferret-execute',
       label: 'Execute Query',
       keybindings: [
         monacoInstance.KeyMod.CtrlCmd | monacoInstance.KeyCode.Enter,
       ],
-      run: () => { onExecute() },
+      run: () => {
+        const sql = getExecutableSQL()
+        if (sql.trim()) onExecuteRef.current(sql)
+      },
     })
 
     // Focus the editor
     editor.focus()
-  }, [onExecute])
+  }, [getExecutableSQL])
 
   // Update the execute action when onExecute changes
   useEffect(() => {
@@ -94,7 +110,7 @@ export function QueryEditor({ value, onChange, onExecute, isExecuting }: Props) 
       <div className="editor-toolbar">
         <button
           className="execute-btn"
-          onClick={onExecute}
+          onClick={() => { const sql = getExecutableSQL(); if (sql.trim()) onExecute(sql) }}
           disabled={isExecuting || !value.trim()}
           title="Execute Query (⌘+Enter)"
         >

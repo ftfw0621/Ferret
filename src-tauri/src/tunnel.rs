@@ -91,9 +91,14 @@ impl TunnelManager {
 
         let (program, args, local_port) = Self::build_command(config)?;
 
-        // If port is already forwarded, let the frontend decide whether to reuse
+        // If port is already forwarded (e.g. by another connection's tunnel), reuse it
         if Self::is_port_already_forwarded(local_port).await {
-            return Err(format!("PORT_IN_USE:{}", local_port));
+            log::info!(
+                "Port {} already forwarded, reusing for {}",
+                local_port,
+                connection_id
+            );
+            return Ok(local_port);
         }
 
         log::info!(

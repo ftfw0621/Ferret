@@ -139,11 +139,11 @@ function App() {
     }
   }, [setActiveConnectionId, updateTab])
 
-  const handleExecute = useCallback(async () => {
-    if (!activeTab || !activeConnectionId || !activeTab.sql.trim()) return
+  const handleExecute = useCallback(async (sql: string) => {
+    if (!activeTab || !activeConnectionId || !sql.trim()) return
     updateTab(activeTab.id, { isExecuting: true, result: null })
     try {
-      const result = await ferret.executeQuery(activeConnectionId, activeTab.sql)
+      const result = await ferret.executeQuery(activeConnectionId, sql)
       updateTab(activeTab.id, { result, isExecuting: false })
     } catch (err) {
       updateTab(activeTab.id, {

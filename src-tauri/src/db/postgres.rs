@@ -2,12 +2,14 @@ use std::collections::HashMap;
 use std::sync::Arc;
 use std::time::Instant;
 
+use async_trait::async_trait;
 use deadpool_postgres::{Config, Pool, Runtime};
 use native_tls::TlsConnector;
 use postgres_native_tls::MakeTlsConnector;
 use tokio::sync::RwLock;
 use tokio_postgres::NoTls;
 
+use super::driver::DatabaseDriver;
 use super::types::*;
 
 pub struct PostgresDriver {
@@ -20,8 +22,11 @@ impl PostgresDriver {
             pools: Arc::new(RwLock::new(HashMap::new())),
         }
     }
+}
 
-    pub async fn connect(&self, config: &ConnectionConfig) -> ConnectionStatus {
+#[async_trait]
+impl DatabaseDriver for PostgresDriver {
+    async fn connect(&self, config: &ConnectionConfig) -> ConnectionStatus {
         let mut pg_config = Config::new();
         pg_config.host = Some(config.host.clone());
         pg_config.port = Some(config.port);
@@ -94,11 +99,11 @@ impl PostgresDriver {
         }
     }
 
-    pub async fn disconnect(&self, connection_id: &str) {
+    async fn disconnect(&self, connection_id: &str) {
         self.pools.write().await.remove(connection_id);
     }
 
-    pub async fn test_connection(
+    async fn test_connection(
         &self,
         config: &ConnectionConfig,
     ) -> Result<String, String> {
@@ -112,7 +117,7 @@ impl PostgresDriver {
         }
     }
 
-    pub async fn execute_query(
+    async fn execute_query(
         &self,
         connection_id: &str,
         sql: &str,
@@ -200,7 +205,7 @@ impl PostgresDriver {
         }
     }
 
-    pub async fn get_schemas(&self, connection_id: &str) -> Result<Vec<SchemaInfo>, String> {
+    async fn get_schemas(&self, connection_id: &str) -> Result<Vec<SchemaInfo>, String> {
         let result = self
             .execute_query(
                 connection_id,
@@ -227,7 +232,7 @@ impl PostgresDriver {
             .collect())
     }
 
-    pub async fn get_tables(
+    async fn get_tables(
         &self,
         connection_id: &str,
         schema: &str,
@@ -288,7 +293,7 @@ impl PostgresDriver {
             .collect())
     }
 
-    pub async fn get_columns(
+    async fn get_columns(
         &self,
         connection_id: &str,
         schema: &str,

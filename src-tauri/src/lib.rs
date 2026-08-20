@@ -1,18 +1,19 @@
 mod commands;
 pub mod db;
 
+use db::driver::DatabaseDriver;
 use db::postgres::PostgresDriver;
 use tokio::sync::Mutex;
 
 pub struct AppState {
-    pub driver: Mutex<PostgresDriver>,
+    pub driver: Mutex<Box<dyn DatabaseDriver>>,
 }
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
         .manage(AppState {
-            driver: Mutex::new(PostgresDriver::new()),
+            driver: Mutex::new(Box::new(PostgresDriver::new())),
         })
         .invoke_handler(tauri::generate_handler![
             commands::list_connections,

@@ -156,26 +156,44 @@ fn write_connections(connections: &[ConnectionConfig], dir: &Path) -> Result<(),
 
 // Keyring helpers — passwords are stored per connection ID
 
+// Keyring is skipped in test mode to avoid macOS authorization prompts
+// and hanging. Passwords are only persisted via keyring in production.
+
+#[cfg(not(test))]
 fn keyring_entry(connection_id: &str) -> Option<keyring::Entry> {
     keyring::Entry::new("com.ftfw.ferret", connection_id).ok()
 }
 
+#[cfg(not(test))]
 fn load_password(connection_id: &str) -> Option<String> {
     keyring_entry(connection_id)
         .and_then(|entry| entry.get_password().ok())
 }
 
+#[cfg(not(test))]
 fn store_password(connection_id: &str, password: &str) {
     if let Some(entry) = keyring_entry(connection_id) {
         let _ = entry.set_password(password);
     }
 }
 
+#[cfg(not(test))]
 fn delete_password(connection_id: &str) {
     if let Some(entry) = keyring_entry(connection_id) {
         let _ = entry.delete_credential();
     }
 }
+
+#[cfg(test)]
+fn load_password(_connection_id: &str) -> Option<String> {
+    None
+}
+
+#[cfg(test)]
+fn store_password(_connection_id: &str, _password: &str) {}
+
+#[cfg(test)]
+fn delete_password(_connection_id: &str) {}
 
 #[cfg(test)]
 mod tests {

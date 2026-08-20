@@ -280,7 +280,17 @@ function App() {
           </>
         ) : (
           <div className="welcome" data-tauri-drag-region>
-            <div className="welcome-icon">🦦</div>
+            <div className="welcome-icon">
+              <svg width="64" height="64" viewBox="0 0 128 128">
+                <defs><linearGradient id="wlg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stopColor="#c07050"/><stop offset="100%" stopColor="#8a4830"/></linearGradient></defs>
+                <rect width="128" height="128" rx="28" fill="url(#wlg)"/>
+                <path d="M40 90 Q30 70 35 55 Q38 45 42 40 L46 32 Q44 28 48 30 Q52 32 50 36 L48 40 Q55 35 64 35 Q73 35 80 40 L78 36 Q76 32 80 30 Q84 28 82 32 L86 40 Q90 45 93 55 Q98 70 88 90 Z" fill="#1c1917"/>
+                <circle cx="52" cy="56" r="5" fill="#faf0e0"/><circle cx="76" cy="56" r="5" fill="#faf0e0"/>
+                <circle cx="53" cy="55.5" r="2.5" fill="#1c1917"/><circle cx="77" cy="55.5" r="2.5" fill="#1c1917"/>
+                <ellipse cx="64" cy="65" rx="4" ry="3" fill="#faf0e0"/>
+                <text x="52" y="84" fontFamily="monospace" fontSize="18" fontWeight="bold" fill="#faf0e0">›_</text>
+              </svg>
+            </div>
             <h1 className="welcome-title">Ferret</h1>
             <p className="welcome-subtitle">Connect to a database to get started</p>
             <div className="welcome-shortcuts">

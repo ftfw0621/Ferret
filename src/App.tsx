@@ -36,7 +36,7 @@ function createTab(connectionId: string | null, title?: string, sql?: string): T
 function App() {
   const {
     connections, statusMap, activeConnectionId, activeConnection, activeStatus,
-    schemasMap, tablesMap, columnsMap, tunnelDead,
+    schemasMap, tablesMap, columnsMap, tunnelDead, connectingIds,
     saveConnection, removeConnection, connectTo, disconnectFrom, testConnection,
     fetchColumns, reconnectTunnel, setActiveConnectionId,
   } = useConnections()
@@ -173,6 +173,7 @@ function App() {
             schemasMap={schemasMap}
             tablesMap={tablesMap}
             columnsMap={columnsMap}
+            connectingIds={connectingIds}
             onAddClick={() => { setEditingConn(undefined); setModalOpen(true) }}
             onConnect={connectTo}
             onDisconnect={disconnectFrom}

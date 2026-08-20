@@ -104,8 +104,18 @@ impl TunnelManager {
             args
         );
 
+        // macOS GUI apps have a minimal PATH that doesn't include Homebrew paths.
+        // Extend PATH so kubectl / custom tools can be found.
+        let system_path = std::env::var("PATH").unwrap_or_default();
+        let home = std::env::var("HOME").unwrap_or_default();
+        let extended_path = format!(
+            "/opt/homebrew/bin:/usr/local/bin:{}/.local/bin:{}",
+            home, system_path
+        );
+
         let mut child = tokio::process::Command::new(&program)
             .args(&args)
+            .env("PATH", &extended_path)
             .stdout(Stdio::piped())
             .stderr(Stdio::piped())
             .kill_on_drop(true)

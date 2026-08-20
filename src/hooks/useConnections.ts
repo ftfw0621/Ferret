@@ -10,6 +10,7 @@ export function useConnections() {
   const [tablesMap, setTablesMap] = useState<Record<string, TableInfo[]>>({})
   const [columnsMap, setColumnsMap] = useState<Record<string, ColumnDetail[]>>({})
   const [tunnelDead, setTunnelDead] = useState<Set<string>>(new Set())
+  const [connectingIds, setConnectingIds] = useState<Set<string>>(new Set())
 
   // Load saved connections on mount
   useEffect(() => {
@@ -62,6 +63,8 @@ export function useConnections() {
       console.error('connectTo: connection not found:', id)
       return
     }
+    // Show connecting state immediately
+    setConnectingIds(prev => new Set(prev).add(id))
     try {
       console.log('Connecting to:', config.name, config.host, config.port)
       const status = await ferret.connect(config)
@@ -104,6 +107,8 @@ export function useConnections() {
         [id]: { id, connected: false, error: String(e) }
       }))
       alert(`Connection error: ${e}`)
+    } finally {
+      setConnectingIds(prev => { const next = new Set(prev); next.delete(id); return next })
     }
   }, [connections])
 
@@ -145,6 +150,7 @@ export function useConnections() {
     tablesMap,
     columnsMap,
     tunnelDead,
+    connectingIds,
     saveConnection,
     removeConnection,
     connectTo,

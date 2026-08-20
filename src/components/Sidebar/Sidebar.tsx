@@ -9,6 +9,7 @@ interface Props {
   schemasMap: Record<string, SchemaInfo[]>
   tablesMap: Record<string, TableInfo[]>
   columnsMap: Record<string, ColumnDetail[]>
+  connectingIds: Set<string>
   onAddClick: () => void
   onConnect: (id: string) => void
   onDisconnect: (id: string) => void
@@ -86,18 +87,27 @@ export function Sidebar(props: Props) {
           const status = statusMap[conn.id]
           const isConnected = status?.connected
           const isActive = conn.id === activeConnectionId
+          const isConnecting = props.connectingIds.has(conn.id)
           const schemas = schemasMap[conn.id] ?? []
 
           return (
             <div key={conn.id}>
               <div
                 className={`tree-item ${isActive ? 'active' : ''}`}
-                onClick={() => isConnected ? props.onDisconnect(conn.id) : props.onConnect(conn.id)}
+                onClick={() => isConnecting ? undefined : isConnected ? props.onDisconnect(conn.id) : props.onConnect(conn.id)}
                 onContextMenu={e => handleContextMenu(e, conn.id)}
               >
-                <span className={`conn-dot ${isConnected ? 'connected' : status?.error ? 'error' : 'disconnected'}`} />
+                <span className={`conn-dot ${isConnecting ? 'connecting' : isConnected ? 'connected' : status?.error ? 'error' : 'disconnected'}`} />
                 <span className="tree-icon db">▥</span>
-                <span>{conn.name || conn.database}</span>
+                <span>{isConnecting ? `${conn.name || conn.database} …` : conn.name || conn.database}</span>
+                {conn.tunnel && <span className="tunnel-icon" title="Tunnel configured">⇋</span>}
+                {!isConnected && !isConnecting && (
+                  <button
+                    className="conn-action connect"
+                    title="Connect"
+                    onClick={e => { e.stopPropagation(); props.onConnect(conn.id) }}
+                  >▶</button>
+                )}
               </div>
 
               {isConnected && schemas.map(schema => {

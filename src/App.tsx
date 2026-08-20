@@ -14,7 +14,7 @@ interface Tab {
   id: string
   title: string
   sql: string
-  result: QueryResult | null
+  results: QueryResult[]
   isExecuting: boolean
   connectionId: string | null
 }
@@ -27,7 +27,7 @@ function createTab(connectionId: string | null, title?: string, sql?: string): T
     id,
     title: title || `Query ${tabCounter - 1}`,
     sql: sql || '',
-    result: null,
+    results: [],
     isExecuting: false,
     connectionId,
   }
@@ -133,7 +133,7 @@ function App() {
     updateTab(tab.id, { isExecuting: true })
     try {
       const result = await ferret.executeQuery(connectionId, query)
-      updateTab(tab.id, { result, isExecuting: false })
+      updateTab(tab.id, { results: [result], isExecuting: false })
     } catch {
       updateTab(tab.id, { isExecuting: false })
     }
@@ -141,16 +141,23 @@ function App() {
 
   const handleExecute = useCallback(async (sql: string) => {
     if (!activeTab || !activeConnectionId || !sql.trim()) return
-    updateTab(activeTab.id, { isExecuting: true, result: null })
-    try {
-      const result = await ferret.executeQuery(activeConnectionId, sql)
-      updateTab(activeTab.id, { result, isExecuting: false })
-    } catch (err) {
-      updateTab(activeTab.id, {
-        result: { columns: [], rows: [], rowCount: 0, durationMs: 0, error: String(err) },
-        isExecuting: false,
-      })
+    // Split by ; into individual statements
+    const statements = sql.split(';').map(s => s.trim()).filter(s => s.length > 0)
+    if (statements.length === 0) return
+
+    updateTab(activeTab.id, { isExecuting: true, results: [] })
+    const results: QueryResult[] = []
+    for (const stmt of statements) {
+      try {
+        const result = await ferret.executeQuery(activeConnectionId, stmt)
+        results.push(result)
+      } catch (err) {
+        results.push({ columns: [], rows: [], rowCount: 0, durationMs: 0, error: String(err) })
+      }
+      // Show results incrementally
+      updateTab(activeTab.id, { results: [...results] })
     }
+    updateTab(activeTab.id, { isExecuting: false })
   }, [activeTab, activeConnectionId, updateTab])
 
   const handleSqlChange = useCallback((sql: string) => {
@@ -267,14 +274,20 @@ function App() {
                   }}
                 />
                 <div className="results-pane">
-                  {activeTab.result && !activeTab.result.error && (
-                    <div className="results-toolbar">
-                      <span>Results</span>
-                      <span className="results-count">{activeTab.result.rowCount} rows</span>
-                      <span className="results-time">{activeTab.result.durationMs}ms</span>
+                  {activeTab.results.length > 0 ? activeTab.results.map((result, i) => (
+                    <div key={i}>
+                      {!result.error && (
+                        <div className="results-toolbar">
+                          <span>{activeTab.results.length > 1 ? `Result ${i + 1}` : 'Results'}</span>
+                          <span className="results-count">{result.rowCount} rows</span>
+                          <span className="results-time">{result.durationMs}ms</span>
+                        </div>
+                      )}
+                      <ResultTable queryResult={result} isExecuting={false} />
                     </div>
+                  )) : (
+                    <ResultTable queryResult={null} isExecuting={activeTab.isExecuting} />
                   )}
-                  <ResultTable queryResult={activeTab.result} isExecuting={activeTab.isExecuting} />
                 </div>
               </div>
             )}
@@ -304,7 +317,7 @@ function App() {
         <StatusBar
           connection={activeConnection}
           status={activeStatus}
-          queryResult={activeTab?.result ?? null}
+          queryResult={activeTab?.results[activeTab.results.length - 1] ?? null}
           tunnelState={
             !activeConnection?.tunnel ? 'none' :
             activeConnectionId && tunnelDead.has(activeConnectionId) ? 'disconnected' :

@@ -1,53 +1,63 @@
 /*
  * Ferret Design Tokens
- * Deep navy blue theme — matched to Mole Mac palette
+ * Soft deep navy — layers close together, low contrast, muted accents
  */
 
 :root {
-  --f-bg-deep:     #111c34;
-  --f-bg-surface:  #162040;
-  --f-bg-card:     #1c2848;
-  --f-bg-input:    #0e1828;
-  --f-bg-hover:    #243050;
-  --f-bg-active:   #2c3a5c;
+  /* ── Backgrounds — minimal layer contrast ── */
+  --f-bg-deep:     #151d30;   /* main bg */
+  --f-bg-surface:  #182236;   /* sidebar, tab bar — only +3 steps from deep */
+  --f-bg-card:     #1c263c;   /* cards, table header — only +3 more */
+  --f-bg-input:    #131b2c;   /* editor bg — slightly darker than deep */
+  --f-bg-hover:    #1f2a42;   /* hover — gentle lift */
+  --f-bg-active:   #253450;   /* selected — noticeable but not loud */
 
-  --f-accent:      #4a9ab8;
-  --f-accent-soft: #6ab8d4;
-  --f-accent-dim:  #3a7a96;
-  --f-accent-bg:   rgba(74, 154, 184, .12);
+  /* ── Accent — desaturated teal, not neon ── */
+  --f-accent:      #5a8fa8;   /* primary — pulled back from vivid */
+  --f-accent-soft: #7aaabe;   /* lighter — for titles */
+  --f-accent-dim:  #3e6880;   /* dim — for subtle highlights */
+  --f-accent-bg:   rgba(90, 143, 168, .08);
 
-  --f-ok:          #4aaa8a;
-  --f-ok-bg:       #122820;
-  --f-warn:        #d4a44a;
-  --f-warn-bg:     #1e1c10;
-  --f-danger:      #d45a5a;
-  --f-danger-bg:   #1e1214;
-  --f-info:        #4a9ab8;
-  --f-info-bg:     rgba(74, 154, 184, .12);
+  /* ── Status — muted, not vivid ── */
+  --f-ok:          #5a9e82;   /* connected — softer green */
+  --f-ok-bg:       #142420;
+  --f-warn:        #b8964a;   /* slow query — pulled back gold */
+  --f-warn-bg:     #1c1a12;
+  --f-danger:      #b85858;   /* error — softer red */
+  --f-danger-bg:   #1c1416;
+  --f-info:        #5a8fa8;
+  --f-info-bg:     rgba(90, 143, 168, .08);
 
-  --f-text:        #dce4f0;
-  --f-text-2:      #7888a0;
-  --f-text-3:      #4e5e78;
-  --f-text-4:      #364058;
+  /* ── Text — soft, not bright white ── */
+  --f-text:        #c0c8d8;   /* primary — warm off-white, NOT bright */
+  --f-text-2:      #708098;   /* secondary — gentle */
+  --f-text-3:      #4a5870;   /* muted */
+  --f-text-4:      #343e52;   /* disabled */
 
-  --f-border:      #243050;
-  --f-border-sub:  #1c2640;
-  --f-divider:     #2c3858;
+  /* ── Borders — nearly invisible ── */
+  --f-border:      #1e2840;   /* barely visible against bg */
+  --f-border-sub:  #1a2238;   /* even more subtle */
+  --f-divider:     #232e44;   /* section dividers */
 
-  --f-select-bg:   rgba(74, 154, 184, .18);
-  --f-select-border: rgba(74, 154, 184, .40);
+  /* ── Selection ── */
+  --f-select-bg:   rgba(90, 143, 168, .14);
+  --f-select-border: rgba(90, 143, 168, .30);
 
-  --f-shadow-sm:   0 1px 2px rgba(0,0,0,.25);
-  --f-shadow-md:   0 2px 8px rgba(0,0,0,.30);
-  --f-shadow-lg:   0 4px 16px rgba(0,0,0,.35);
+  /* ── Shadows — very subtle ── */
+  --f-shadow-sm:   0 1px 2px rgba(0, 0, 0, .15);
+  --f-shadow-md:   0 2px 6px rgba(0, 0, 0, .18);
+  --f-shadow-lg:   0 4px 12px rgba(0, 0, 0, .22);
 
+  /* ── Radii ── */
   --f-radius-sm:   4px;
   --f-radius-md:   6px;
   --f-radius-lg:   8px;
 
+  /* ── Typography ── */
   --f-font-ui:     -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Helvetica Neue', Arial, sans-serif;
   --f-font-mono:   'JetBrains Mono', 'Fira Code', 'SF Mono', Consolas, Monaco, monospace;
 
+  /* ── Type scale ── */
   --f-size-xs:     0.65rem;
   --f-size-sm:     0.75rem;
   --f-size-base:   0.8125rem;
@@ -56,11 +66,12 @@
   --f-size-xl:     1.125rem;
   --f-size-2xl:    1.5rem;
 
-  --f-token-keyword:   #6ab8d4;
-  --f-token-string:    #4aaa8a;
-  --f-token-number:    #d4a44a;
-  --f-token-comment:   #4e5e78;
-  --f-token-type:      #8aaace;
-  --f-token-function:  #c8a0d8;
-  --f-token-operator:  #d45a5a;
+  /* ── Monaco Editor tokens — softer, not neon ── */
+  --f-token-keyword:   #7aaabe;  /* keywords — soft teal */
+  --f-token-string:    #5a9e82;  /* strings — muted green */
+  --f-token-number:    #b8964a;  /* numbers — warm gold */
+  --f-token-comment:   #4a5870;  /* comments — blends into bg */
+  --f-token-type:      #7a96b8;  /* types — dusty blue */
+  --f-token-function:  #a88cb8;  /* functions — soft lavender */
+  --f-token-operator:  #b85858;  /* operators — muted red */
 }

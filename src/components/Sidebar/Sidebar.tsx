@@ -63,7 +63,7 @@ export function Sidebar(props: Props) {
   if (connections.length === 0) {
     return (
       <aside className="sidebar">
-        <div className="sidebar-header">
+        <div className="sidebar-header" data-tauri-drag-region>
           <span className="sidebar-title">Connections</span>
           <button className="sidebar-add" onClick={props.onAddClick} title="Add Connection">+</button>
         </div>

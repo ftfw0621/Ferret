@@ -96,7 +96,7 @@ function App() {
       <main className="main-area">
         {hasActiveConnection ? (
           <>
-            <div className="tab-bar">
+            <div className="tab-bar" data-tauri-drag-region>
               <div className="tab active">
                 <span className="tab-icon">◆</span>
                 Query 1
@@ -120,7 +120,7 @@ function App() {
             </div>
           </>
         ) : (
-          <div className="welcome">
+          <div className="welcome" data-tauri-drag-region>
             <div className="welcome-icon">🦦</div>
             <h1 className="welcome-title">Ferret</h1>
             <p className="welcome-subtitle">Connect to a database to get started</p>

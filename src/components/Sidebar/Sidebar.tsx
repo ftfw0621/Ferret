@@ -99,15 +99,16 @@ export function Sidebar(props: Props) {
               >
                 <span className={`conn-dot ${isConnecting ? 'connecting' : isConnected ? 'connected' : status?.error ? 'error' : 'disconnected'}`} />
                 <span className="tree-icon db">▥</span>
-                <span>{isConnecting ? `${conn.name || conn.database} …` : conn.name || conn.database}</span>
-                {conn.tunnel && <span className="tunnel-icon" title="Tunnel configured">⇋</span>}
-                {!isConnected && !isConnecting && (
+                <span className="conn-name">{isConnecting ? `${conn.name || conn.database} …` : conn.name || conn.database}</span>
+                <span className="conn-actions">
+                  {conn.tunnel && <span className="tunnel-icon" title="Tunnel configured">⇋</span>}
                   <button
                     className="conn-action connect"
                     title="Connect"
+                    style={{ visibility: !isConnected && !isConnecting ? 'visible' : 'hidden' }}
                     onClick={e => { e.stopPropagation(); props.onConnect(conn.id) }}
                   >▶</button>
-                )}
+                </span>
               </div>
 
               {isConnected && schemas.map(schema => {

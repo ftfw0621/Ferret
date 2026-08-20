@@ -57,16 +57,16 @@
 .conn-dot.connecting { background: var(--f-accent); animation: pulse-dot 1s ease-in-out infinite; }
 @keyframes pulse-dot { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
 .tree-count { margin-left: auto; font-size: 0.6rem; color: var(--f-text-4); }
-.tunnel-icon { margin-left: auto; font-size: 0.65rem; color: var(--f-text-4); flex-shrink: 0; }
+.conn-name { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.conn-actions { margin-left: auto; display: flex; align-items: center; gap: 0.2rem; flex-shrink: 0; }
+.tunnel-icon { font-size: 0.65rem; color: var(--f-text-4); }
 .conn-action {
   background: none; border: none; cursor: pointer;
   font-size: 0.55rem; padding: 0 0.25rem; border-radius: var(--f-radius-sm);
-  color: var(--f-text-4); flex-shrink: 0; line-height: 1;
+  color: var(--f-text-4); line-height: 1; width: 1rem; text-align: center;
 }
-.conn-action:not(.tunnel-icon) { margin-left: auto; }
 .conn-action.connect { color: var(--f-ok); }
 .conn-action:hover { background: var(--f-bg-hover); color: var(--f-text); }
-.tree-item .tunnel-icon + .conn-action { margin-left: 0.3rem; }
 .sidebar-section {
   padding: 0.4rem 0.75rem 0.2rem;
   font-size: var(--f-size-xs); font-weight: 600;

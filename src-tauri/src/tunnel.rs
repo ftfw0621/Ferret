@@ -31,15 +31,12 @@ impl TunnelManager {
         }
     }
 
-    /// Check if a port is already in use before starting a tunnel.
-    async fn check_port_available(port: u16) -> Result<(), String> {
-        match tokio::net::TcpStream::connect(format!("127.0.0.1:{}", port)).await {
-            Ok(_) => Err(format!(
-                "Port {} is already in use. Close the existing tunnel or choose a different local port.",
-                port
-            )),
-            Err(_) => Ok(()),
-        }
+    /// Check if a port is already forwarded and usable.
+    /// Returns true if the port is already connectable (reuse), false if free (need to start).
+    async fn is_port_already_forwarded(port: u16) -> bool {
+        tokio::net::TcpStream::connect(format!("127.0.0.1:{}", port))
+            .await
+            .is_ok()
     }
 
     fn build_command(config: &TunnelConfig) -> Result<(String, Vec<String>, u16), String> {
@@ -94,8 +91,10 @@ impl TunnelManager {
 
         let (program, args, local_port) = Self::build_command(config)?;
 
-        // Check if port is already in use
-        Self::check_port_available(local_port).await?;
+        // If port is already forwarded, let the frontend decide whether to reuse
+        if Self::is_port_already_forwarded(local_port).await {
+            return Err(format!("PORT_IN_USE:{}", local_port));
+        }
 
         log::info!(
             "Starting tunnel for {}: {} {:?}",

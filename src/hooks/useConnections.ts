@@ -101,12 +101,52 @@ export function useConnections() {
         alert(`Connection failed: ${status.error || 'Unknown error'}`)
       }
     } catch (e) {
-      console.error('Connect invoke error:', e)
-      setStatusMap(prev => ({
-        ...prev,
-        [id]: { id, connected: false, error: String(e) }
-      }))
-      alert(`Connection error: ${e}`)
+      const err = String(e)
+      // Tunnel port already in use — ask user to reuse or reconfigure
+      if (err.includes('PORT_IN_USE:')) {
+        const port = err.split('PORT_IN_USE:')[1]
+        const reuse = confirm(
+          `Port ${port} is already forwarded.\n\nClick OK to reuse the existing tunnel, or Cancel to edit the connection and change the port.`
+        )
+        if (reuse) {
+          // Retry connecting directly through the existing port forward
+          try {
+            const directConfig = { ...config, tunnel: undefined, host: '127.0.0.1', port: parseInt(port) }
+            const status = await ferret.connect(directConfig)
+            setStatusMap(prev => ({ ...prev, [id]: status }))
+            if (status.connected) {
+              setTunnelDead(prev => { const next = new Set(prev); next.delete(id); return next })
+              setActiveConnectionId(id)
+              const schemas = await ferret.getSchemas(id).catch(() => [] as SchemaInfo[])
+              setSchemasMap(prev => ({ ...prev, [id]: schemas }))
+              const tableResults = await Promise.all(
+                schemas.map(schema =>
+                  ferret.getTables(id, schema.name)
+                    .then(tables => ({ key: `${id}:${schema.name}`, tables }))
+                    .catch(() => ({ key: `${id}:${schema.name}`, tables: [] as TableInfo[] }))
+                )
+              )
+              setTablesMap(prev => {
+                const next = { ...prev }
+                for (const { key, tables } of tableResults) next[key] = tables
+                return next
+              })
+            } else {
+              alert(`Connection failed: ${status.error || 'Unknown error'}`)
+            }
+          } catch (retryErr) {
+            alert(`Connection error: ${retryErr}`)
+          }
+        }
+        // If Cancel, user can right-click → Edit to change the port
+      } else {
+        console.error('Connect invoke error:', e)
+        setStatusMap(prev => ({
+          ...prev,
+          [id]: { id, connected: false, error: err }
+        }))
+        alert(`Connection error: ${e}`)
+      }
     } finally {
       setConnectingIds(prev => { const next = new Set(prev); next.delete(id); return next })
     }

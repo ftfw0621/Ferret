@@ -1,0 +1,365 @@
+<title>Ferret Logo</title>
+<style>
+  body {
+    background: #1c1917;
+    color: #c8c0b8;
+    font-family: -apple-system, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    gap: 3rem;
+    margin: 0;
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 3rem;
+    max-width: 900px;
+    padding: 2rem;
+  }
+  .option {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+  }
+  .option h3 {
+    font-size: 13px;
+    color: #887e76;
+    font-weight: 500;
+    text-align: center;
+  }
+  .logo-wrap {
+    width: 128px;
+    height: 128px;
+    border-radius: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .sizes {
+    display: flex;
+    gap: 1.5rem;
+    align-items: flex-end;
+  }
+  .size-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.4rem;
+  }
+  .size-label {
+    font-size: 10px;
+    color: #5e564e;
+  }
+  h1 {
+    font-size: 1.5rem;
+    color: #d08868;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+  }
+  p.sub {
+    color: #5e564e;
+    font-size: 13px;
+    margin-top: -2rem;
+  }
+</style>
+
+<h1>Ferret App Icon</h1>
+<p class="sub">6 options — warm dark palette, ferret character</p>
+
+<div class="grid">
+  <!-- Option A: Minimal ferret face -->
+  <div class="option">
+    <svg width="128" height="128" viewBox="0 0 128 128">
+      <defs>
+        <linearGradient id="bgA" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#2a2422"/>
+          <stop offset="100%" stop-color="#1e1a18"/>
+        </linearGradient>
+      </defs>
+      <rect width="128" height="128" rx="28" fill="url(#bgA)"/>
+      <!-- Ferret face - minimal geometric -->
+      <ellipse cx="64" cy="62" rx="30" ry="28" fill="#3a3230"/>
+      <!-- Ears -->
+      <circle cx="42" cy="38" r="10" fill="#4a3e38"/>
+      <circle cx="42" cy="38" r="6" fill="#c07050"/>
+      <circle cx="86" cy="38" r="10" fill="#4a3e38"/>
+      <circle cx="86" cy="38" r="6" fill="#c07050"/>
+      <!-- Face mask -->
+      <ellipse cx="64" cy="56" rx="16" ry="12" fill="#d0c0b0"/>
+      <!-- Eyes -->
+      <circle cx="54" cy="56" r="4" fill="#1c1917"/>
+      <circle cx="74" cy="56" r="4" fill="#1c1917"/>
+      <circle cx="55.5" cy="55" r="1.5" fill="#fff"/>
+      <circle cx="75.5" cy="55" r="1.5" fill="#fff"/>
+      <!-- Nose -->
+      <ellipse cx="64" cy="64" rx="4" ry="3" fill="#5a4440"/>
+      <!-- Mouth -->
+      <path d="M60 67 Q64 71 68 67" stroke="#5a4440" stroke-width="1.5" fill="none"/>
+      <!-- Data icon: small table/grid -->
+      <rect x="50" y="80" width="28" height="16" rx="3" fill="#c07050" opacity="0.9"/>
+      <line x1="50" y1="86" x2="78" y2="86" stroke="#1e1a18" stroke-width="1"/>
+      <line x1="50" y1="90" x2="78" y2="90" stroke="#1e1a18" stroke-width="1"/>
+      <line x1="60" y1="80" x2="60" y2="96" stroke="#1e1a18" stroke-width="1"/>
+      <line x1="68" y1="80" x2="68" y2="96" stroke="#1e1a18" stroke-width="1"/>
+    </svg>
+    <h3>A — Face + Data Grid</h3>
+  </div>
+
+  <!-- Option B: Ferret curled around database cylinder -->
+  <div class="option">
+    <svg width="128" height="128" viewBox="0 0 128 128">
+      <defs>
+        <linearGradient id="bgB" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#2a2422"/>
+          <stop offset="100%" stop-color="#1e1a18"/>
+        </linearGradient>
+      </defs>
+      <rect width="128" height="128" rx="28" fill="url(#bgB)"/>
+      <!-- Database cylinder -->
+      <ellipse cx="64" cy="48" rx="22" ry="8" fill="#4a3e38"/>
+      <rect x="42" y="48" width="44" height="30" fill="#3a3230"/>
+      <ellipse cx="64" cy="78" rx="22" ry="8" fill="#3a3230"/>
+      <ellipse cx="64" cy="48" rx="22" ry="8" fill="#4a3e38" stroke="#c07050" stroke-width="1.5"/>
+      <line x1="42" y1="48" x2="42" y2="78" stroke="#c07050" stroke-width="1.5"/>
+      <line x1="86" y1="48" x2="86" y2="78" stroke="#c07050" stroke-width="1.5"/>
+      <ellipse cx="64" cy="78" rx="22" ry="8" fill="none" stroke="#c07050" stroke-width="1.5"/>
+      <!-- Data lines on cylinder -->
+      <line x1="50" y1="56" x2="78" y2="56" stroke="#c07050" stroke-width="0.8" opacity="0.4"/>
+      <line x1="50" y1="62" x2="78" y2="62" stroke="#c07050" stroke-width="0.8" opacity="0.4"/>
+      <line x1="50" y1="68" x2="78" y2="68" stroke="#c07050" stroke-width="0.8" opacity="0.4"/>
+      <!-- Ferret peeking from behind -->
+      <circle cx="88" cy="42" r="12" fill="#3a3230"/>
+      <ellipse cx="88" cy="40" rx="8" ry="6" fill="#d0c0b0"/>
+      <circle cx="84" cy="38" r="2.5" fill="#1c1917"/>
+      <circle cx="92" cy="38" r="2.5" fill="#1c1917"/>
+      <circle cx="85" cy="37.5" r="1" fill="#fff"/>
+      <circle cx="93" cy="37.5" r="1" fill="#fff"/>
+      <ellipse cx="88" cy="43" rx="2.5" ry="2" fill="#5a4440"/>
+      <!-- Ears -->
+      <circle cx="80" cy="32" r="5" fill="#4a3e38"/>
+      <circle cx="80" cy="32" r="3" fill="#c07050"/>
+      <circle cx="96" cy="32" r="5" fill="#4a3e38"/>
+      <circle cx="96" cy="32" r="3" fill="#c07050"/>
+      <!-- Tail wrapping around -->
+      <path d="M86 54 Q98 60 94 72 Q90 82 80 86" stroke="#3a3230" stroke-width="5" fill="none" stroke-linecap="round"/>
+      <path d="M86 54 Q98 60 94 72 Q90 82 80 86" stroke="#4a3e38" stroke-width="3" fill="none" stroke-linecap="round"/>
+    </svg>
+    <h3>B — Peeking over DB</h3>
+  </div>
+
+  <!-- Option C: Ferret silhouette with > prompt -->
+  <div class="option">
+    <svg width="128" height="128" viewBox="0 0 128 128">
+      <defs>
+        <linearGradient id="bgC" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#c07050"/>
+          <stop offset="100%" stop-color="#8a4830"/>
+        </linearGradient>
+      </defs>
+      <rect width="128" height="128" rx="28" fill="url(#bgC)"/>
+      <!-- Ferret silhouette -->
+      <path d="M40 90 Q30 70 35 55 Q38 45 42 40 L46 32 Q44 28 48 30 Q52 32 50 36 L48 40 Q55 35 64 35 Q73 35 80 40 L78 36 Q76 32 80 30 Q84 28 82 32 L86 40 Q90 45 93 55 Q98 70 88 90 Z" fill="#1c1917"/>
+      <!-- Eyes -->
+      <circle cx="52" cy="56" r="5" fill="#faf0e0"/>
+      <circle cx="76" cy="56" r="5" fill="#faf0e0"/>
+      <circle cx="53" cy="55.5" r="2.5" fill="#1c1917"/>
+      <circle cx="77" cy="55.5" r="2.5" fill="#1c1917"/>
+      <!-- Nose -->
+      <ellipse cx="64" cy="65" rx="4" ry="3" fill="#faf0e0"/>
+      <!-- > prompt -->
+      <text x="52" y="84" font-family="monospace" font-size="18" font-weight="bold" fill="#faf0e0">›_</text>
+    </svg>
+    <h3>C — Coral + Silhouette</h3>
+  </div>
+
+  <!-- Option D: Warm circle with ferret mark -->
+  <div class="option">
+    <svg width="128" height="128" viewBox="0 0 128 128">
+      <rect width="128" height="128" rx="28" fill="#1e1a18"/>
+      <!-- Warm circle -->
+      <circle cx="64" cy="58" r="36" fill="#2a2422"/>
+      <circle cx="64" cy="58" r="36" fill="none" stroke="#c07050" stroke-width="1.5"/>
+      <!-- Ferret face inside circle -->
+      <ellipse cx="64" cy="54" rx="20" ry="18" fill="#3a3230"/>
+      <!-- Ears -->
+      <circle cx="50" cy="40" r="7" fill="#4a3e38"/>
+      <circle cx="50" cy="40" r="4" fill="#c07050"/>
+      <circle cx="78" cy="40" r="7" fill="#4a3e38"/>
+      <circle cx="78" cy="40" r="4" fill="#c07050"/>
+      <!-- Face mask -->
+      <ellipse cx="64" cy="52" rx="11" ry="8" fill="#d0c0b0"/>
+      <!-- Eyes -->
+      <circle cx="58" cy="50" r="3" fill="#1c1917"/>
+      <circle cx="70" cy="50" r="3" fill="#1c1917"/>
+      <circle cx="59" cy="49.5" r="1.2" fill="#fff"/>
+      <circle cx="71" cy="49.5" r="1.2" fill="#fff"/>
+      <!-- Nose -->
+      <ellipse cx="64" cy="56" rx="3" ry="2" fill="#5a4440"/>
+      <!-- SQL text below -->
+      <text x="46" y="88" font-family="monospace" font-size="14" font-weight="600" fill="#c07050" letter-spacing="2">SQL</text>
+    </svg>
+    <h3>D — Circle Badge</h3>
+  </div>
+
+  <!-- Option E: Standing ferret with magnifying glass -->
+  <div class="option">
+    <svg width="128" height="128" viewBox="0 0 128 128">
+      <defs>
+        <linearGradient id="bgE" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#272422"/>
+          <stop offset="100%" stop-color="#1e1a18"/>
+        </linearGradient>
+      </defs>
+      <rect width="128" height="128" rx="28" fill="url(#bgE)"/>
+      <!-- Ferret body standing -->
+      <ellipse cx="56" cy="82" rx="16" ry="22" fill="#3a3230"/>
+      <!-- Head -->
+      <circle cx="56" cy="48" r="16" fill="#3a3230"/>
+      <!-- Neck -->
+      <rect x="48" y="58" width="16" height="10" fill="#3a3230"/>
+      <!-- Face mask -->
+      <ellipse cx="56" cy="48" rx="9" ry="7" fill="#d0c0b0"/>
+      <!-- Ears -->
+      <circle cx="44" cy="36" r="6" fill="#4a3e38"/>
+      <circle cx="44" cy="36" r="3.5" fill="#c07050"/>
+      <circle cx="68" cy="36" r="6" fill="#4a3e38"/>
+      <circle cx="68" cy="36" r="3.5" fill="#c07050"/>
+      <!-- Eyes -->
+      <circle cx="51" cy="46" r="3" fill="#1c1917"/>
+      <circle cx="61" cy="46" r="3" fill="#1c1917"/>
+      <circle cx="52" cy="45.5" r="1.2" fill="#fff"/>
+      <circle cx="62" cy="45.5" r="1.2" fill="#fff"/>
+      <!-- Nose -->
+      <ellipse cx="56" cy="52" rx="2.5" ry="2" fill="#5a4440"/>
+      <!-- Magnifying glass (searching data!) -->
+      <circle cx="82" cy="58" r="14" fill="none" stroke="#c07050" stroke-width="3"/>
+      <circle cx="82" cy="58" r="10" fill="#2a2422" opacity="0.5"/>
+      <line x1="92" y1="68" x2="100" y2="78" stroke="#c07050" stroke-width="3" stroke-linecap="round"/>
+      <!-- Data rows inside magnifying glass -->
+      <line x1="74" y1="54" x2="90" y2="54" stroke="#c07050" stroke-width="1" opacity="0.5"/>
+      <line x1="74" y1="58" x2="90" y2="58" stroke="#c07050" stroke-width="1" opacity="0.5"/>
+      <line x1="74" y1="62" x2="90" y2="62" stroke="#c07050" stroke-width="1" opacity="0.5"/>
+      <!-- Paw holding glass -->
+      <circle cx="72" cy="64" r="4" fill="#3a3230"/>
+    </svg>
+    <h3>E — Searching Data</h3>
+  </div>
+
+  <!-- Option F: Simple "F" monogram with ferret ears -->
+  <div class="option">
+    <svg width="128" height="128" viewBox="0 0 128 128">
+      <defs>
+        <linearGradient id="bgF" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#2a2422"/>
+          <stop offset="100%" stop-color="#1e1a18"/>
+        </linearGradient>
+      </defs>
+      <rect width="128" height="128" rx="28" fill="url(#bgF)"/>
+      <!-- F letter -->
+      <text x="38" y="92" font-family="-apple-system, sans-serif" font-size="72" font-weight="700" fill="#c07050">F</text>
+      <!-- Ferret ears on the F -->
+      <path d="M48 28 Q44 18 40 24 Q38 28 42 32" fill="#c07050"/>
+      <path d="M60 28 Q64 18 68 24 Q70 28 66 32" fill="#c07050"/>
+      <!-- Ear inner -->
+      <path d="M48 29 Q45 22 43 26 Q42 28 44 31" fill="#d08868"/>
+      <path d="M60 29 Q63 22 65 26 Q66 28 64 31" fill="#d08868"/>
+      <!-- Eyes on the F bar -->
+      <circle cx="52" cy="52" r="3" fill="#1c1917"/>
+      <circle cx="66" cy="52" r="3" fill="#1c1917"/>
+      <circle cx="53" cy="51.5" r="1.2" fill="#fff"/>
+      <circle cx="67" cy="51.5" r="1.2" fill="#fff"/>
+      <!-- Nose -->
+      <ellipse cx="60" cy="58" rx="2" ry="1.5" fill="#1c1917"/>
+    </svg>
+    <h3>F — Monogram + Ears</h3>
+  </div>
+</div>
+
+<!-- Size preview with option B -->
+<h1 style="margin-top:2rem">Size Preview (Option B)</h1>
+<div class="sizes">
+  <div class="size-item">
+    <svg width="16" height="16" viewBox="0 0 128 128">
+      <rect width="128" height="128" rx="28" fill="#2a2422"/>
+      <ellipse cx="64" cy="58" rx="22" ry="8" fill="#4a3e38" stroke="#c07050" stroke-width="3"/>
+      <rect x="42" y="58" width="44" height="24" fill="#3a3230"/>
+      <ellipse cx="64" cy="82" rx="22" ry="8" fill="none" stroke="#c07050" stroke-width="3"/>
+      <circle cx="88" cy="48" r="14" fill="#3a3230"/>
+      <ellipse cx="88" cy="46" rx="8" ry="6" fill="#d0c0b0"/>
+    </svg>
+    <span class="size-label">16px</span>
+  </div>
+  <div class="size-item">
+    <svg width="32" height="32" viewBox="0 0 128 128">
+      <rect width="128" height="128" rx="28" fill="#2a2422"/>
+      <ellipse cx="64" cy="48" rx="22" ry="8" fill="#4a3e38" stroke="#c07050" stroke-width="2"/>
+      <rect x="42" y="48" width="44" height="30" fill="#3a3230"/>
+      <ellipse cx="64" cy="78" rx="22" ry="8" fill="none" stroke="#c07050" stroke-width="2"/>
+      <circle cx="88" cy="42" r="12" fill="#3a3230"/>
+      <ellipse cx="88" cy="40" rx="8" ry="6" fill="#d0c0b0"/>
+      <circle cx="84" cy="38" r="2.5" fill="#1c1917"/>
+      <circle cx="92" cy="38" r="2.5" fill="#1c1917"/>
+    </svg>
+    <span class="size-label">32px</span>
+  </div>
+  <div class="size-item">
+    <svg width="64" height="64" viewBox="0 0 128 128">
+      <defs><linearGradient id="bgBs" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#2a2422"/><stop offset="100%" stop-color="#1e1a18"/></linearGradient></defs>
+      <rect width="128" height="128" rx="28" fill="url(#bgBs)"/>
+      <ellipse cx="64" cy="48" rx="22" ry="8" fill="#4a3e38" stroke="#c07050" stroke-width="1.5"/>
+      <rect x="42" y="48" width="44" height="30" fill="#3a3230"/>
+      <ellipse cx="64" cy="78" rx="22" ry="8" fill="none" stroke="#c07050" stroke-width="1.5"/>
+      <line x1="50" y1="56" x2="78" y2="56" stroke="#c07050" stroke-width="0.8" opacity="0.4"/>
+      <line x1="50" y1="62" x2="78" y2="62" stroke="#c07050" stroke-width="0.8" opacity="0.4"/>
+      <circle cx="88" cy="42" r="12" fill="#3a3230"/>
+      <ellipse cx="88" cy="40" rx="8" ry="6" fill="#d0c0b0"/>
+      <circle cx="84" cy="38" r="2.5" fill="#1c1917"/>
+      <circle cx="92" cy="38" r="2.5" fill="#1c1917"/>
+      <circle cx="85" cy="37.5" r="1" fill="#fff"/>
+      <circle cx="93" cy="37.5" r="1" fill="#fff"/>
+      <ellipse cx="88" cy="43" rx="2.5" ry="2" fill="#5a4440"/>
+      <circle cx="80" cy="32" r="5" fill="#4a3e38"/>
+      <circle cx="80" cy="32" r="3" fill="#c07050"/>
+      <circle cx="96" cy="32" r="5" fill="#4a3e38"/>
+      <circle cx="96" cy="32" r="3" fill="#c07050"/>
+      <path d="M86 54 Q98 60 94 72 Q90 82 80 86" stroke="#4a3e38" stroke-width="3" fill="none" stroke-linecap="round"/>
+    </svg>
+    <span class="size-label">64px</span>
+  </div>
+  <div class="size-item">
+    <svg width="128" height="128" viewBox="0 0 128 128">
+      <defs><linearGradient id="bgBl" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#2a2422"/><stop offset="100%" stop-color="#1e1a18"/></linearGradient></defs>
+      <rect width="128" height="128" rx="28" fill="url(#bgBl)"/>
+      <ellipse cx="64" cy="48" rx="22" ry="8" fill="#4a3e38"/>
+      <rect x="42" y="48" width="44" height="30" fill="#3a3230"/>
+      <ellipse cx="64" cy="78" rx="22" ry="8" fill="#3a3230"/>
+      <ellipse cx="64" cy="48" rx="22" ry="8" fill="#4a3e38" stroke="#c07050" stroke-width="1.5"/>
+      <line x1="42" y1="48" x2="42" y2="78" stroke="#c07050" stroke-width="1.5"/>
+      <line x1="86" y1="48" x2="86" y2="78" stroke="#c07050" stroke-width="1.5"/>
+      <ellipse cx="64" cy="78" rx="22" ry="8" fill="none" stroke="#c07050" stroke-width="1.5"/>
+      <line x1="50" y1="56" x2="78" y2="56" stroke="#c07050" stroke-width="0.8" opacity="0.4"/>
+      <line x1="50" y1="62" x2="78" y2="62" stroke="#c07050" stroke-width="0.8" opacity="0.4"/>
+      <line x1="50" y1="68" x2="78" y2="68" stroke="#c07050" stroke-width="0.8" opacity="0.4"/>
+      <circle cx="88" cy="42" r="12" fill="#3a3230"/>
+      <ellipse cx="88" cy="40" rx="8" ry="6" fill="#d0c0b0"/>
+      <circle cx="84" cy="38" r="2.5" fill="#1c1917"/>
+      <circle cx="92" cy="38" r="2.5" fill="#1c1917"/>
+      <circle cx="85" cy="37.5" r="1" fill="#fff"/>
+      <circle cx="93" cy="37.5" r="1" fill="#fff"/>
+      <ellipse cx="88" cy="43" rx="2.5" ry="2" fill="#5a4440"/>
+      <circle cx="80" cy="32" r="5" fill="#4a3e38"/>
+      <circle cx="80" cy="32" r="3" fill="#c07050"/>
+      <circle cx="96" cy="32" r="5" fill="#4a3e38"/>
+      <circle cx="96" cy="32" r="3" fill="#c07050"/>
+      <path d="M86 54 Q98 60 94 72 Q90 82 80 86" stroke="#3a3230" stroke-width="5" fill="none" stroke-linecap="round"/>
+      <path d="M86 54 Q98 60 94 72 Q90 82 80 86" stroke="#4a3e38" stroke-width="3" fill="none" stroke-linecap="round"/>
+    </svg>
+    <span class="size-label">128px</span>
+  </div>
+</div>

@@ -61,10 +61,21 @@ export function useConnections() {
         try {
           const schemas = await ferret.getSchemas(id)
           setSchemasMap(prev => ({ ...prev, [id]: schemas }))
-          for (const schema of schemas) {
-            const tables = await ferret.getTables(id, schema.name)
-            setTablesMap(prev => ({ ...prev, [`${id}:${schema.name}`]: tables }))
-          }
+          // Fetch all tables in parallel
+          const tableResults = await Promise.all(
+            schemas.map(schema =>
+              ferret.getTables(id, schema.name)
+                .then(tables => ({ key: `${id}:${schema.name}`, tables }))
+                .catch(() => ({ key: `${id}:${schema.name}`, tables: [] as TableInfo[] }))
+            )
+          )
+          setTablesMap(prev => {
+            const next = { ...prev }
+            for (const { key, tables } of tableResults) {
+              next[key] = tables
+            }
+            return next
+          })
         } catch (e) {
           console.error('Schema fetch error:', e)
         }

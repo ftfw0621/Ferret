@@ -19,7 +19,12 @@
         "minHeight": 600,
         "resizable": true,
         "decorations": true,
-        "titleBarStyle": "Overlay"
+        "titleBarStyle": "Overlay",
+        "transparent": true,
+        "windowEffects": {
+          "effects": ["underWindowBackground"],
+          "state": "active"
+        }
       }
     ],
     "security": {

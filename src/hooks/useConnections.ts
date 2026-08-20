@@ -19,16 +19,21 @@ export function useConnections() {
   const activeStatus = activeConnectionId ? statusMap[activeConnectionId] ?? null : null
 
   const saveConnection = useCallback(async (config: ConnectionConfig) => {
-    await ferret.saveConnection(config)
-    setConnections(prev => {
-      const idx = prev.findIndex(c => c.id === config.id)
-      if (idx >= 0) {
-        const next = [...prev]
-        next[idx] = config
-        return next
-      }
-      return [...prev, config]
-    })
+    try {
+      await ferret.saveConnection(config)
+      setConnections(prev => {
+        const idx = prev.findIndex(c => c.id === config.id)
+        if (idx >= 0) {
+          const next = [...prev]
+          next[idx] = config
+          return next
+        }
+        return [...prev, config]
+      })
+    } catch (e) {
+      console.error('Save connection error:', e)
+      alert(`Failed to save connection: ${e}`)
+    }
   }, [])
 
   const removeConnection = useCallback(async (id: string) => {
@@ -41,23 +46,39 @@ export function useConnections() {
 
   const connectTo = useCallback(async (id: string) => {
     const config = connections.find(c => c.id === id)
-    if (!config) return
-    const status = await ferret.connect(config)
-    setStatusMap(prev => ({ ...prev, [id]: status }))
-    if (status.connected) {
-      setActiveConnectionId(id)
-      // Fetch schemas
-      try {
-        const schemas = await ferret.getSchemas(id)
-        setSchemasMap(prev => ({ ...prev, [id]: schemas }))
-        // Fetch tables for each schema
-        for (const schema of schemas) {
-          const tables = await ferret.getTables(id, schema.name)
-          setTablesMap(prev => ({ ...prev, [`${id}:${schema.name}`]: tables }))
+    if (!config) {
+      console.error('connectTo: connection not found:', id)
+      return
+    }
+    try {
+      console.log('Connecting to:', config.name, config.host, config.port)
+      const status = await ferret.connect(config)
+      console.log('Connect result:', status)
+      setStatusMap(prev => ({ ...prev, [id]: status }))
+      if (status.connected) {
+        setActiveConnectionId(id)
+        // Fetch schemas
+        try {
+          const schemas = await ferret.getSchemas(id)
+          setSchemasMap(prev => ({ ...prev, [id]: schemas }))
+          for (const schema of schemas) {
+            const tables = await ferret.getTables(id, schema.name)
+            setTablesMap(prev => ({ ...prev, [`${id}:${schema.name}`]: tables }))
+          }
+        } catch (e) {
+          console.error('Schema fetch error:', e)
         }
-      } catch (e) {
-        console.error('Schema fetch error:', e)
+      } else {
+        console.error('Connection failed:', status.error)
+        alert(`Connection failed: ${status.error || 'Unknown error'}`)
       }
+    } catch (e) {
+      console.error('Connect invoke error:', e)
+      setStatusMap(prev => ({
+        ...prev,
+        [id]: { id, connected: false, error: String(e) }
+      }))
+      alert(`Connection error: ${e}`)
     }
   }, [connections])
 

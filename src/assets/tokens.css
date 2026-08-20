@@ -34,11 +34,11 @@
   --f-info:        #6898b0;
   --f-info-bg:     #1c2028;
 
-  /* ── Text — warm, readable ── */
-  --f-text:        #c8c0b8;
-  --f-text-2:      #887e76;
-  --f-text-3:      #5e564e;
-  --f-text-4:      #403a34;
+  /* ── Text — warm, brighter ── */
+  --f-text:        #e8e0d8;
+  --f-text-2:      #a89e96;
+  --f-text-3:      #78706a;
+  --f-text-4:      #585048;
 
   /* ── Borders — same tone as bg, one shade up ── */
   --f-border:      #2a2724;

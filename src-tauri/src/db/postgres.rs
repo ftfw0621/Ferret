@@ -7,19 +7,21 @@ use deadpool_postgres::{Config, Pool, Runtime};
 use native_tls::TlsConnector;
 use postgres_native_tls::MakeTlsConnector;
 use tokio::sync::RwLock;
-use tokio_postgres::NoTls;
+use tokio_postgres::{CancelToken, NoTls};
 
 use super::driver::DatabaseDriver;
 use super::types::*;
 
 pub struct PostgresDriver {
     pools: Arc<RwLock<HashMap<String, Pool>>>,
+    cancel_token: Arc<RwLock<Option<CancelToken>>>,
 }
 
 impl PostgresDriver {
     pub fn new() -> Self {
         Self {
             pools: Arc::new(RwLock::new(HashMap::new())),
+            cancel_token: Arc::new(RwLock::new(None)),
         }
     }
 }
@@ -147,6 +149,9 @@ impl DatabaseDriver for PostgresDriver {
 
         let start = Instant::now();
 
+        // Clear any previous cancel token
+        *self.cancel_token.write().await = None;
+
         let client = match pool.get().await {
             Ok(c) => c,
             Err(e) => {
@@ -159,6 +164,9 @@ impl DatabaseDriver for PostgresDriver {
                 };
             }
         };
+
+        // Store cancel token so queries can be cancelled
+        *self.cancel_token.write().await = Some(client.cancel_token());
 
         // Use prepare + query so we get column info even with 0 rows
         let stmt = match client.prepare(sql).await {
@@ -222,6 +230,13 @@ impl DatabaseDriver for PostgresDriver {
                 duration_ms: start.elapsed().as_millis() as u64,
                 error: Some(e.to_string()),
             },
+        }
+    }
+
+    async fn cancel_query(&self) {
+        if let Some(token) = self.cancel_token.write().await.take() {
+            log::info!("Cancelling active query");
+            let _ = token.cancel_query(NoTls).await;
         }
     }
 

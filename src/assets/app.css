@@ -118,6 +118,8 @@
 }
 .execute-btn:hover:not(:disabled) { background: var(--f-accent-soft); }
 .execute-btn:disabled { opacity: 0.45; cursor: not-allowed; }
+.execute-btn.cancel { background: var(--f-danger); }
+.execute-btn.cancel:hover { background: var(--f-danger); opacity: 0.85; }
 .execute-icon { font-size: 0.55rem; }
 .execute-spinner { display: inline-block; animation: spin 0.8s linear infinite; font-size: 0.7rem; }
 @keyframes spin { to { transform: rotate(360deg); } }

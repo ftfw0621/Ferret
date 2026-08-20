@@ -10,6 +10,7 @@ interface Props {
   value: string
   onChange: (value: string) => void
   onExecute: (sql: string) => void
+  onCancel?: () => void
   isExecuting?: boolean
 }
 
@@ -54,7 +55,7 @@ const FERRET_THEME: Monaco.editor.IStandaloneThemeData = {
   },
 }
 
-export function QueryEditor({ value, onChange, onExecute, isExecuting }: Props) {
+export function QueryEditor({ value, onChange, onExecute, onCancel, isExecuting }: Props) {
   const editorRef = useRef<Monaco.editor.IStandaloneCodeEditor | null>(null)
   const onExecuteRef = useRef(onExecute)
   onExecuteRef.current = onExecute
@@ -108,19 +109,26 @@ export function QueryEditor({ value, onChange, onExecute, isExecuting }: Props) 
   return (
     <div className="query-editor-wrap">
       <div className="editor-toolbar">
-        <button
-          className="execute-btn"
-          onClick={() => { const sql = getExecutableSQL(); if (sql.trim()) onExecute(sql) }}
-          disabled={isExecuting || !value.trim()}
-          title="Execute Query (⌘+Enter)"
-        >
-          {isExecuting ? (
-            <span className="execute-spinner">⟳</span>
-          ) : (
+        {isExecuting ? (
+          <button
+            className="execute-btn cancel"
+            onClick={onCancel}
+            title="Cancel Query (Esc)"
+          >
+            <span className="execute-icon">■</span>
+            <span>Cancel</span>
+          </button>
+        ) : (
+          <button
+            className="execute-btn"
+            onClick={() => { const sql = getExecutableSQL(); if (sql.trim()) onExecute(sql) }}
+            disabled={!value.trim()}
+            title="Execute Query (⌘+Enter)"
+          >
             <span className="execute-icon">▶</span>
-          )}
-          <span>{isExecuting ? 'Running…' : 'Execute'}</span>
-        </button>
+            <span>Execute</span>
+          </button>
+        )}
         <span className="toolbar-hint">⌘+Enter</span>
       </div>
       <div className="query-editor">

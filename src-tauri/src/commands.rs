@@ -100,8 +100,11 @@ pub async fn execute_query(
 }
 
 #[tauri::command]
-pub async fn cancel_query() -> Result<(), String> {
-    // TODO: implement query cancellation
+pub async fn cancel_query(
+    state: State<'_, AppState>,
+) -> Result<(), String> {
+    let driver = state.driver.lock().await;
+    driver.cancel_query().await;
     Ok(())
 }
 

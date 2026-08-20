@@ -139,26 +139,36 @@ function App() {
     }
   }, [setActiveConnectionId, updateTab])
 
+  const cancelledRef = useRef(false)
+
   const handleExecute = useCallback(async (sql: string) => {
     if (!activeTab || !activeConnectionId || !sql.trim()) return
     // Split by ; into individual statements
     const statements = sql.split(';').map(s => s.trim()).filter(s => s.length > 0)
     if (statements.length === 0) return
 
+    cancelledRef.current = false
     updateTab(activeTab.id, { isExecuting: true, results: [] })
     const results: QueryResult[] = []
     for (const stmt of statements) {
+      if (cancelledRef.current) break
       try {
         const result = await ferret.executeQuery(activeConnectionId, stmt)
         results.push(result)
       } catch (err) {
         results.push({ columns: [], rows: [], rowCount: 0, durationMs: 0, error: String(err) })
+        if (cancelledRef.current) break
       }
       // Show results incrementally
       updateTab(activeTab.id, { results: [...results] })
     }
     updateTab(activeTab.id, { isExecuting: false })
   }, [activeTab, activeConnectionId, updateTab])
+
+  const handleCancel = useCallback(async () => {
+    cancelledRef.current = true
+    await ferret.cancelQuery()
+  }, [])
 
   const handleSqlChange = useCallback((sql: string) => {
     if (activeTabId) updateTab(activeTabId, { sql })
@@ -244,6 +254,7 @@ function App() {
                     value={activeTab.sql}
                     onChange={handleSqlChange}
                     onExecute={handleExecute}
+                    onCancel={handleCancel}
                     isExecuting={activeTab.isExecuting}
                   />
                 </div>

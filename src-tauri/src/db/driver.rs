@@ -18,4 +18,5 @@ pub trait DatabaseDriver: Send + Sync {
         schema: &str,
         table: &str,
     ) -> Result<Vec<ColumnDetail>, String>;
+    async fn cancel_query(&self);
 }

@@ -187,6 +187,10 @@ impl DatabaseDriver for MockDriver {
             .cloned()
             .unwrap_or_default())
     }
+
+    async fn cancel_query(&self) {
+        // No-op for mock driver
+    }
 }
 
 #[cfg(test)]

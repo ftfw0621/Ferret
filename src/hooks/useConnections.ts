@@ -9,10 +9,22 @@ export function useConnections() {
   const [schemasMap, setSchemasMap] = useState<Record<string, SchemaInfo[]>>({})
   const [tablesMap, setTablesMap] = useState<Record<string, TableInfo[]>>({})
   const [columnsMap, setColumnsMap] = useState<Record<string, ColumnDetail[]>>({})
+  const [tunnelDead, setTunnelDead] = useState<Set<string>>(new Set())
 
   // Load saved connections on mount
   useEffect(() => {
     ferret.listConnections().then(setConnections).catch(console.error)
+  }, [])
+
+  // Listen for tunnel-disconnected events from the backend
+  useEffect(() => {
+    const unlisten = ferret.onTunnelStatus((event) => {
+      if (event.status === 'disconnected') {
+        console.warn('Tunnel disconnected:', event.connectionId, event.message)
+        setTunnelDead(prev => new Set(prev).add(event.connectionId))
+      }
+    })
+    return () => { unlisten.then(fn => fn()) }
   }, [])
 
   const activeConnection = connections.find(c => c.id === activeConnectionId) ?? null
@@ -56,6 +68,8 @@ export function useConnections() {
       console.log('Connect result:', status)
       setStatusMap(prev => ({ ...prev, [id]: status }))
       if (status.connected) {
+        // Clear any previous tunnel-dead state
+        setTunnelDead(prev => { const next = new Set(prev); next.delete(id); return next })
         setActiveConnectionId(id)
         // Fetch schemas
         try {
@@ -116,6 +130,11 @@ export function useConnections() {
     }
   }, [])
 
+  const reconnectTunnel = useCallback(async (id: string) => {
+    await disconnectFrom(id)
+    await connectTo(id)
+  }, [disconnectFrom, connectTo])
+
   return {
     connections,
     statusMap,
@@ -125,12 +144,14 @@ export function useConnections() {
     schemasMap,
     tablesMap,
     columnsMap,
+    tunnelDead,
     saveConnection,
     removeConnection,
     connectTo,
     disconnectFrom,
     testConnection,
     fetchColumns,
+    reconnectTunnel,
     setActiveConnectionId,
   }
 }

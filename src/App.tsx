@@ -36,9 +36,9 @@ function createTab(connectionId: string | null, title?: string, sql?: string): T
 function App() {
   const {
     connections, statusMap, activeConnectionId, activeConnection, activeStatus,
-    schemasMap, tablesMap, columnsMap,
+    schemasMap, tablesMap, columnsMap, tunnelDead,
     saveConnection, removeConnection, connectTo, disconnectFrom, testConnection,
-    fetchColumns, setActiveConnectionId,
+    fetchColumns, reconnectTunnel, setActiveConnectionId,
   } = useConnections()
 
   const [modalOpen, setModalOpen] = useState(false)
@@ -300,7 +300,17 @@ function App() {
             </div>
           </div>
         )}
-        <StatusBar connection={activeConnection} status={activeStatus} queryResult={activeTab?.result ?? null} />
+        <StatusBar
+          connection={activeConnection}
+          status={activeStatus}
+          queryResult={activeTab?.result ?? null}
+          tunnelState={
+            !activeConnection?.tunnel ? 'none' :
+            activeConnectionId && tunnelDead.has(activeConnectionId) ? 'disconnected' :
+            activeStatus?.connected ? 'active' : 'none'
+          }
+          onReconnect={activeConnectionId ? () => reconnectTunnel(activeConnectionId) : undefined}
+        />
       </main>
 
       <ConnectionModal

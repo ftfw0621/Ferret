@@ -14,3 +14,31 @@
 .status-dot.off { background: var(--f-text-4); }
 .status-sep { color: var(--f-text-4); }
 .status-right { margin-left: auto; display: flex; gap: 0.75rem; font-family: var(--f-font-mono); }
+
+.tunnel-badge {
+  font-family: var(--f-font-mono);
+  font-size: var(--f-size-xs);
+  padding: 0 0.35rem;
+  border-radius: var(--f-radius-sm);
+}
+.tunnel-badge.active {
+  color: var(--f-ok);
+}
+.tunnel-badge.dead {
+  color: var(--f-danger);
+  font-weight: 500;
+}
+.tunnel-reconnect {
+  background: none;
+  border: 1px solid var(--f-danger);
+  color: var(--f-danger);
+  font-size: var(--f-size-xs);
+  font-family: var(--f-font-ui);
+  padding: 0 0.4rem;
+  border-radius: var(--f-radius-sm);
+  cursor: pointer;
+  line-height: 1.4;
+}
+.tunnel-reconnect:hover {
+  background: var(--f-danger-bg);
+}

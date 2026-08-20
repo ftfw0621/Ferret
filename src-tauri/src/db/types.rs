@@ -26,6 +26,30 @@ impl Default for SslMode {
     }
 }
 
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+#[serde(rename_all = "lowercase")]
+pub enum TunnelType {
+    Kubectl,
+    Custom,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct TunnelConfig {
+    #[serde(rename = "type")]
+    pub tunnel_type: TunnelType,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub kube_context: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub kube_namespace: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub kube_resource: Option<String>,
+    pub local_port: u16,
+    pub remote_port: u16,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub custom_command: Option<String>,
+}
+
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct ConnectionConfig {
@@ -42,6 +66,8 @@ pub struct ConnectionConfig {
     pub ssl_mode: SslMode,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub color: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub tunnel: Option<TunnelConfig>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -135,6 +161,7 @@ mod tests {
             password: Some("secret".to_string()),
             ssl_mode: SslMode::Disable,
             color: None,
+            tunnel: None,
         };
 
         let json = serde_json::to_string(&config).unwrap();
@@ -158,6 +185,7 @@ mod tests {
             password: None,
             ssl_mode: SslMode::VerifyFull,
             color: None,
+            tunnel: None,
         };
         let json = serde_json::to_string(&config).unwrap();
         assert!(json.contains("driverType"));

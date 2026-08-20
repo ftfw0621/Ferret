@@ -1,4 +1,15 @@
 import { invoke } from '@tauri-apps/api/core'
+import { listen, type UnlistenFn } from '@tauri-apps/api/event'
+
+export interface TunnelConfig {
+  type: 'kubectl' | 'custom'
+  kubeContext?: string
+  kubeNamespace?: string
+  kubeResource?: string
+  localPort: number
+  remotePort: number
+  customCommand?: string
+}
 
 export interface ConnectionConfig {
   id: string
@@ -11,6 +22,7 @@ export interface ConnectionConfig {
   password?: string
   sslMode: string
   color?: string
+  tunnel?: TunnelConfig
 }
 
 export interface ConnectionStatus {
@@ -54,6 +66,12 @@ export interface ColumnDetail {
   isPrimaryKey: boolean
   comment?: string
   ordinalPosition: number
+}
+
+export interface TunnelEvent {
+  connectionId: string
+  status: 'disconnected'
+  message: string
 }
 
 export const ferret = {
@@ -100,4 +118,8 @@ export const ferret = {
   // Utilities
   parseConnectionUrl: (url: string): Promise<ConnectionConfig> =>
     invoke('parse_connection_url', { url }),
+
+  // Events
+  onTunnelStatus: (handler: (event: TunnelEvent) => void): Promise<UnlistenFn> =>
+    listen<TunnelEvent>('tunnel-status', (e) => handler(e.payload)),
 }

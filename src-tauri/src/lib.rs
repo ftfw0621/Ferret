@@ -1,20 +1,21 @@
 mod commands;
 pub mod db;
+mod tunnel;
 
 use db::driver::DatabaseDriver;
 use db::postgres::PostgresDriver;
 use tokio::sync::Mutex;
+use tauri::Manager;
+use tunnel::TunnelManager;
 
 pub struct AppState {
     pub driver: Mutex<Box<dyn DatabaseDriver>>,
+    pub tunnel_manager: TunnelManager,
 }
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
-        .manage(AppState {
-            driver: Mutex::new(Box::new(PostgresDriver::new())),
-        })
         .invoke_handler(tauri::generate_handler![
             commands::list_connections,
             commands::save_connection,
@@ -31,6 +32,10 @@ pub fn run() {
             commands::parse_connection_url,
         ])
         .setup(|app| {
+            app.manage(AppState {
+                driver: Mutex::new(Box::new(PostgresDriver::new())),
+                tunnel_manager: TunnelManager::new(app.handle().clone()),
+            });
             if cfg!(debug_assertions) {
                 app.handle().plugin(
                     tauri_plugin_log::Builder::default()

@@ -19,6 +19,8 @@ struct StoredConnection {
     ssl_mode: super::types::SslMode,
     #[serde(skip_serializing_if = "Option::is_none")]
     color: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    tunnel: Option<super::types::TunnelConfig>,
 }
 
 fn default_config_dir() -> PathBuf {
@@ -66,6 +68,7 @@ pub fn load_connections(config_dir: Option<&Path>) -> Vec<ConnectionConfig> {
                 password: s.password,
                 ssl_mode: s.ssl_mode,
                 color: s.color,
+                tunnel: s.tunnel,
             }
         })
         .collect()
@@ -142,6 +145,7 @@ fn write_connections(connections: &[ConnectionConfig], dir: &Path) -> Result<(),
             password: c.password.clone(),
             ssl_mode: c.ssl_mode.clone(),
             color: c.color.clone(),
+            tunnel: c.tunnel.clone(),
         })
         .collect();
 
@@ -172,6 +176,7 @@ mod tests {
             password: Some("testpass".to_string()),
             ssl_mode: SslMode::Disable,
             color: None,
+            tunnel: None,
         }
     }
 

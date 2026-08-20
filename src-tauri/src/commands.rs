@@ -32,8 +32,24 @@ pub async fn connect_db(
     state: State<'_, AppState>,
     config: ConnectionConfig,
 ) -> Result<ConnectionStatus, String> {
+    let mut effective_config = config.clone();
+
+    // Start tunnel if configured
+    if let Some(ref tunnel) = config.tunnel {
+        let local_port = state.tunnel_manager.start(&config.id, tunnel).await?;
+        effective_config.host = "127.0.0.1".to_string();
+        effective_config.port = local_port;
+    }
+
     let driver = state.driver.lock().await;
-    Ok(driver.connect(&config).await)
+    let status = driver.connect(&effective_config).await;
+
+    // If connection failed and we started a tunnel, stop it
+    if !status.connected && config.tunnel.is_some() {
+        state.tunnel_manager.stop(&config.id).await;
+    }
+
+    Ok(status)
 }
 
 #[tauri::command]
@@ -43,6 +59,8 @@ pub async fn disconnect_db(
 ) -> Result<(), String> {
     let driver = state.driver.lock().await;
     driver.disconnect(&connection_id).await;
+    // Stop tunnel if one was active for this connection
+    state.tunnel_manager.stop(&connection_id).await;
     Ok(())
 }
 
@@ -51,8 +69,24 @@ pub async fn test_connection(
     state: State<'_, AppState>,
     config: ConnectionConfig,
 ) -> Result<String, String> {
+    let mut effective_config = config.clone();
+
+    // Start tunnel if configured
+    if let Some(ref tunnel) = config.tunnel {
+        let local_port = state.tunnel_manager.start(&config.id, tunnel).await?;
+        effective_config.host = "127.0.0.1".to_string();
+        effective_config.port = local_port;
+    }
+
     let driver = state.driver.lock().await;
-    driver.test_connection(&config).await
+    let result = driver.test_connection(&effective_config).await;
+
+    // Stop tunnel after test (test_connection connects then disconnects internally)
+    if config.tunnel.is_some() {
+        state.tunnel_manager.stop(&config.id).await;
+    }
+
+    result
 }
 
 #[tauri::command]

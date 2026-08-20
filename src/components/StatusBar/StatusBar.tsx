@@ -5,9 +5,11 @@ interface Props {
   connection: ConnectionConfig | null
   status: ConnectionStatus | null
   queryResult: QueryResult | null
+  tunnelState: 'none' | 'active' | 'disconnected'
+  onReconnect?: () => void
 }
 
-export function StatusBar({ connection, status, queryResult }: Props) {
+export function StatusBar({ connection, status, queryResult, tunnelState, onReconnect }: Props) {
   return (
     <div className="status-bar">
       <div className="status-item">
@@ -18,6 +20,25 @@ export function StatusBar({ connection, status, queryResult }: Props) {
         <>
           <span className="status-sep">·</span>
           <span>{status.serverVersion.split(' ').slice(0, 2).join(' ')}</span>
+        </>
+      )}
+      {tunnelState === 'active' && connection?.tunnel && (
+        <>
+          <span className="status-sep">·</span>
+          <span className="tunnel-badge active">
+            ⇋ {connection.tunnel.type === 'kubectl' ? 'kubectl' : 'tunnel'}:{connection.tunnel.localPort}
+          </span>
+        </>
+      )}
+      {tunnelState === 'disconnected' && (
+        <>
+          <span className="status-sep">·</span>
+          <span className="tunnel-badge dead">⚠ Tunnel lost</span>
+          {onReconnect && (
+            <button className="tunnel-reconnect" onClick={onReconnect}>
+              Reconnect
+            </button>
+          )}
         </>
       )}
       <div className="status-right">

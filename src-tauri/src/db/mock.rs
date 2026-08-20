@@ -205,6 +205,7 @@ mod tests {
             password: None,
             ssl_mode: SslMode::Disable,
             color: None,
+            tunnel: None,
         }
     }
 

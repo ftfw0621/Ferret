@@ -598,6 +598,7 @@ pub fn parse_connection_string(url: &str) -> Result<ConnectionConfig, String> {
         password,
         ssl_mode,
         color: None,
+        tunnel: None,
     })
 }
 

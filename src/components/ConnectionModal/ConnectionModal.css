@@ -38,6 +38,19 @@
 }
 .conn-string-input:focus { border-color: var(--f-accent); }
 .conn-string-input::placeholder { color: var(--f-text-4); }
+.tunnel-section {
+  margin-top: 0.25rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--f-border-sub);
+}
+.tunnel-info {
+  font-size: var(--f-size-xs);
+  color: var(--f-text-3);
+  padding: 0.3rem 0.5rem;
+  background: var(--f-bg-hover);
+  border-radius: var(--f-radius-sm);
+  margin-top: 0.25rem;
+}
 .test-result { font-size: var(--f-size-xs); margin-top: 0.5rem; padding: 0.4rem 0.6rem; border-radius: var(--f-radius-sm); }
 .test-result.success { background: var(--f-ok-bg); color: var(--f-ok); }
 .test-result.error { background: var(--f-danger-bg); color: var(--f-danger); }

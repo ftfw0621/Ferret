@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import './ConnectionModal.css'
 import { ferret } from '../../lib/tauri'
-import type { ConnectionConfig } from '../../lib/tauri'
+import type { ConnectionConfig, TunnelConfig } from '../../lib/tauri'
 
 interface Props {
   isOpen: boolean
@@ -21,11 +21,22 @@ const emptyForm = {
   sslMode: 'disable',
 }
 
+const emptyTunnelForm = {
+  kubeContext: '',
+  kubeNamespace: '',
+  kubeResource: '',
+  localPort: '15432',
+  remotePort: '5432',
+  customCommand: '',
+}
+
 export function ConnectionModal({ isOpen, onClose, onSave, onTest, editingConnection }: Props) {
   const [form, setForm] = useState(emptyForm)
   const [connString, setConnString] = useState('')
   const [testResult, setTestResult] = useState<{ ok: boolean; message: string } | null>(null)
   const [testing, setTesting] = useState(false)
+  const [tunnelType, setTunnelType] = useState<'' | 'kubectl' | 'custom'>('')
+  const [tunnelForm, setTunnelForm] = useState(emptyTunnelForm)
 
   useEffect(() => {
     if (isOpen) {
@@ -39,8 +50,24 @@ export function ConnectionModal({ isOpen, onClose, onSave, onTest, editingConnec
           password: editingConnection.password ?? '',
           sslMode: editingConnection.sslMode,
         })
+        if (editingConnection.tunnel) {
+          setTunnelType(editingConnection.tunnel.type)
+          setTunnelForm({
+            kubeContext: editingConnection.tunnel.kubeContext ?? '',
+            kubeNamespace: editingConnection.tunnel.kubeNamespace ?? '',
+            kubeResource: editingConnection.tunnel.kubeResource ?? '',
+            localPort: String(editingConnection.tunnel.localPort),
+            remotePort: String(editingConnection.tunnel.remotePort),
+            customCommand: editingConnection.tunnel.customCommand ?? '',
+          })
+        } else {
+          setTunnelType('')
+          setTunnelForm(emptyTunnelForm)
+        }
       } else {
         setForm(emptyForm)
+        setTunnelType('')
+        setTunnelForm(emptyTunnelForm)
       }
       setConnString('')
       setTestResult(null)
@@ -77,6 +104,15 @@ export function ConnectionModal({ isOpen, onClose, onSave, onTest, editingConnec
     username: form.username,
     password: form.password || undefined,
     sslMode: form.sslMode,
+    tunnel: tunnelType ? {
+      type: tunnelType,
+      kubeContext: tunnelForm.kubeContext || undefined,
+      kubeNamespace: tunnelForm.kubeNamespace || undefined,
+      kubeResource: tunnelForm.kubeResource || undefined,
+      localPort: parseInt(tunnelForm.localPort) || 15432,
+      remotePort: parseInt(tunnelForm.remotePort) || 5432,
+      customCommand: tunnelForm.customCommand || undefined,
+    } as TunnelConfig : undefined,
   })
 
   const handleTest = async () => {
@@ -177,6 +213,81 @@ export function ConnectionModal({ isOpen, onClose, onSave, onTest, editingConnec
               <option value="verify-ca">Verify CA</option>
               <option value="verify-full">Verify Full</option>
             </select>
+          </div>
+          {/* Tunnel */}
+          <div className="tunnel-section">
+            <div className="input-group">
+              <label className="input-label">Tunnel</label>
+              <select className="input-field" value={tunnelType}
+                onChange={e => setTunnelType(e.target.value as '' | 'kubectl' | 'custom')}>
+                <option value="">None</option>
+                <option value="kubectl">kubectl port-forward</option>
+                <option value="custom">Custom Command</option>
+              </select>
+            </div>
+            {tunnelType === 'kubectl' && (
+              <>
+                <div className="input-row">
+                  <div className="input-group">
+                    <label className="input-label">Context</label>
+                    <input className="input-field" value={tunnelForm.kubeContext}
+                      placeholder="current"
+                      onChange={e => setTunnelForm({ ...tunnelForm, kubeContext: e.target.value })}
+                      autoCapitalize="off" autoCorrect="off" spellCheck={false} />
+                  </div>
+                  <div className="input-group">
+                    <label className="input-label">Namespace</label>
+                    <input className="input-field" value={tunnelForm.kubeNamespace}
+                      placeholder="default"
+                      onChange={e => setTunnelForm({ ...tunnelForm, kubeNamespace: e.target.value })}
+                      autoCapitalize="off" autoCorrect="off" spellCheck={false} />
+                  </div>
+                </div>
+                <div className="input-group">
+                  <label className="input-label">Resource</label>
+                  <input className="input-field" value={tunnelForm.kubeResource}
+                    placeholder="pod/my-pod or svc/my-svc"
+                    onChange={e => setTunnelForm({ ...tunnelForm, kubeResource: e.target.value })}
+                    autoCapitalize="off" autoCorrect="off" spellCheck={false} />
+                </div>
+                <div className="input-row">
+                  <div className="input-group">
+                    <label className="input-label">Local Port</label>
+                    <input className="input-field" value={tunnelForm.localPort}
+                      onChange={e => setTunnelForm({ ...tunnelForm, localPort: e.target.value })}
+                      autoCapitalize="off" />
+                  </div>
+                  <div className="input-group">
+                    <label className="input-label">Remote Port</label>
+                    <input className="input-field" value={tunnelForm.remotePort}
+                      onChange={e => setTunnelForm({ ...tunnelForm, remotePort: e.target.value })}
+                      autoCapitalize="off" />
+                  </div>
+                </div>
+              </>
+            )}
+            {tunnelType === 'custom' && (
+              <>
+                <div className="input-group">
+                  <label className="input-label">Command</label>
+                  <input className="input-field" value={tunnelForm.customCommand}
+                    placeholder="ssh -L 5432:rds-host:5432 bastion"
+                    onChange={e => setTunnelForm({ ...tunnelForm, customCommand: e.target.value })}
+                    autoCapitalize="off" autoCorrect="off" spellCheck={false} />
+                </div>
+                <div className="input-group">
+                  <label className="input-label">Local Port</label>
+                  <input className="input-field" value={tunnelForm.localPort}
+                    onChange={e => setTunnelForm({ ...tunnelForm, localPort: e.target.value })}
+                    autoCapitalize="off" />
+                </div>
+              </>
+            )}
+            {tunnelType && (
+              <div className="tunnel-info">
+                ↳ Connects via 127.0.0.1:{tunnelForm.localPort || '…'}
+              </div>
+            )}
           </div>
           {testResult && (
             <div className={`test-result ${testResult.ok ? 'success' : 'error'}`}>

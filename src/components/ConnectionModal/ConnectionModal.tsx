@@ -111,8 +111,8 @@ export function ConnectionModal({ isOpen, onClose, onSave, onTest, editingConnec
   if (!isOpen) return null
 
   return (
-    <div className="modal-overlay" onClick={onClose}>
-      <div className="modal-card" onClick={e => e.stopPropagation()}>
+    <div className="modal-overlay">
+      <div className="modal-card">
         <div className="modal-header">
           <h2 className="modal-title">{editingConnection ? 'Edit Connection' : 'New Connection'}</h2>
           <button className="modal-close" onClick={onClose}>✕</button>
@@ -123,39 +123,48 @@ export function ConnectionModal({ isOpen, onClose, onSave, onTest, editingConnec
             placeholder="Paste connection string: postgresql://user:pass@host:5432/db"
             value={connString}
             onChange={e => handleConnStringPaste(e.target.value)}
+            autoCapitalize="off"
+            autoCorrect="off"
+            spellCheck={false}
           />
           <div className="input-group">
             <label className="input-label">Name</label>
             <input className="input-field" value={form.name} placeholder="My Database"
-              onChange={e => setForm({ ...form, name: e.target.value })} />
+              onChange={e => setForm({ ...form, name: e.target.value })}
+              autoCapitalize="off" autoCorrect="off" spellCheck={false} />
           </div>
           <div className="input-row">
             <div className="input-group">
               <label className="input-label">Host</label>
               <input className="input-field" value={form.host}
-                onChange={e => setForm({ ...form, host: e.target.value })} />
+                onChange={e => setForm({ ...form, host: e.target.value })}
+                autoCapitalize="off" autoCorrect="off" spellCheck={false} />
             </div>
             <div className="input-group">
               <label className="input-label">Port</label>
               <input className="input-field" value={form.port}
-                onChange={e => setForm({ ...form, port: e.target.value })} />
+                onChange={e => setForm({ ...form, port: e.target.value })}
+                autoCapitalize="off" />
             </div>
           </div>
           <div className="input-group">
             <label className="input-label">Database</label>
             <input className="input-field" value={form.database}
-              onChange={e => setForm({ ...form, database: e.target.value })} />
+              onChange={e => setForm({ ...form, database: e.target.value })}
+              autoCapitalize="off" autoCorrect="off" spellCheck={false} />
           </div>
           <div className="input-row">
             <div className="input-group">
               <label className="input-label">Username</label>
               <input className="input-field" value={form.username}
-                onChange={e => setForm({ ...form, username: e.target.value })} />
+                onChange={e => setForm({ ...form, username: e.target.value })}
+                autoCapitalize="off" autoCorrect="off" spellCheck={false} />
             </div>
             <div className="input-group">
               <label className="input-label">Password</label>
               <input className="input-field" type="password" value={form.password}
-                onChange={e => setForm({ ...form, password: e.target.value })} />
+                onChange={e => setForm({ ...form, password: e.target.value })}
+                autoCapitalize="off" autoCorrect="off" />
             </div>
           </div>
           <div className="input-group">

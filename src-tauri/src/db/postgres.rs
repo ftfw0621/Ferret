@@ -90,11 +90,20 @@ impl DatabaseDriver for PostgresDriver {
                     error: Some(format!("Query error: {e}")),
                 },
             },
-            Err(e) => ConnectionStatus {
+            Err(e) => {
+                // Dig into the error chain to find the actual cause
+                let mut msg = format!("{e}");
+                let mut source: Option<&dyn std::error::Error> = std::error::Error::source(&e);
+                while let Some(cause) = source {
+                    msg = format!("{msg}: {cause}");
+                    source = std::error::Error::source(cause);
+                }
+                ConnectionStatus {
                 id: config.id.clone(),
                 connected: false,
                 server_version: None,
-                error: Some(format!("Connection error: {e}")),
+                error: Some(msg),
+            }
             },
         }
     }

@@ -123,19 +123,7 @@
 @keyframes spin { to { transform: rotate(360deg); } }
 .toolbar-hint { font-size: var(--f-size-xs); color: var(--f-text-4); font-family: var(--f-font-mono); }
 
-.query-editor { flex: 1; display: flex; background: var(--f-bg-input); overflow: hidden; }
-.editor-gutter {
-  width: 36px; background: var(--f-bg-surface); border-right: 1px solid var(--f-border-sub);
-  padding: 0.5rem 0; font-family: var(--f-font-mono); font-size: var(--f-size-xs);
-  color: var(--f-text-4); text-align: right; overflow: hidden; flex-shrink: 0; user-select: none;
-}
-.gutter-line { padding-right: 8px; line-height: 1.7; }
-.editor-textarea {
-  flex: 1; background: transparent; color: var(--f-text); font-family: var(--f-font-mono);
-  font-size: var(--f-size-sm); line-height: 1.7; padding: 0.5rem 0.75rem;
-  border: none; outline: none; resize: none; overflow: auto; tab-size: 2;
-}
-.editor-textarea::placeholder { color: var(--f-text-4); }
+.query-editor { flex: 1; overflow: hidden; }
 
 /* Result table */
 .result-table-wrap { flex: 1; overflow: auto; }

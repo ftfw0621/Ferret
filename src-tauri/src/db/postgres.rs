@@ -12,6 +12,23 @@ use tokio_postgres::{CancelToken, NoTls};
 use super::driver::DatabaseDriver;
 use super::types::*;
 
+/// Extract detailed error message from tokio_postgres::Error.
+/// By default, .to_string() only shows "db error" for database errors.
+fn format_pg_error(e: &tokio_postgres::Error) -> String {
+    if let Some(db_err) = e.as_db_error() {
+        let mut msg = format!("{}: {}", db_err.severity(), db_err.message());
+        if let Some(detail) = db_err.detail() {
+            msg.push_str(&format!("\nDetail: {}", detail));
+        }
+        if let Some(hint) = db_err.hint() {
+            msg.push_str(&format!("\nHint: {}", hint));
+        }
+        msg
+    } else {
+        e.to_string()
+    }
+}
+
 pub struct PostgresDriver {
     pools: Arc<RwLock<HashMap<String, Pool>>>,
     cancel_token: Arc<RwLock<Option<CancelToken>>>,
@@ -177,7 +194,7 @@ impl DatabaseDriver for PostgresDriver {
                     rows: vec![],
                     row_count: 0,
                     duration_ms: start.elapsed().as_millis() as u64,
-                    error: Some(e.to_string()),
+                    error: Some(format_pg_error(&e)),
                 };
             }
         };
@@ -228,7 +245,7 @@ impl DatabaseDriver for PostgresDriver {
                 rows: vec![],
                 row_count: 0,
                 duration_ms: start.elapsed().as_millis() as u64,
-                error: Some(e.to_string()),
+                error: Some(format_pg_error(&e)),
             },
         }
     }

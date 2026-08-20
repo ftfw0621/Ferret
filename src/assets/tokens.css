@@ -1,58 +1,58 @@
 /*
  * Ferret Design Tokens
- * Warm dark chocolate — inspired by Mole Mac software page
- * Soft, low contrast, warm brown undertones
+ * Warm dark — cohesive single-tone palette, no transparency
+ * Inspired by Mole Mac, Linear, Arc browser dark modes
  */
 
 :root {
-  /* ── Backgrounds — warm dark chocolate ── */
-  --f-bg-deep:     #1e1a18;   /* main content — opaque */
-  --f-bg-surface:  #24201e;   /* tab bar, toolbars — opaque */
-  --f-bg-card:     #2a2624;   /* cards, table header */
-  --f-bg-input:    #1a1614;   /* editor bg */
-  --f-bg-hover:    #302c28;   /* hover */
-  --f-bg-active:   #38322c;   /* selected */
+  /* ── Backgrounds — same warm family, tiny steps ── */
+  --f-bg-deep:     #1c1917;   /* everything sits on this */
+  --f-bg-surface:  #211e1c;   /* sidebar, tab bar — barely different */
+  --f-bg-card:     #272422;   /* cards, table header */
+  --f-bg-input:    #191614;   /* editor, inputs — slightly recessed */
+  --f-bg-hover:    #2c2926;   /* hover */
+  --f-bg-active:   #33302c;   /* selected */
 
-  /* ── Sidebar — semi-transparent for vibrancy ── */
-  --f-sidebar-bg:  rgba(30, 26, 24, .65);
-  --f-sidebar-hover: rgba(44, 38, 34, .50);
-  --f-sidebar-active: rgba(52, 44, 38, .50);
+  /* same for sidebar — no special transparency */
+  --f-sidebar-bg:  #211e1c;
+  --f-sidebar-hover: #2c2926;
+  --f-sidebar-active: #33302c;
 
-  /* ── Accent — warm coral, desaturated ── */
-  --f-accent:      #c07050;   /* primary — warm coral, not neon */
-  --f-accent-soft: #d48868;   /* lighter — for titles */
-  --f-accent-dim:  #8a5840;   /* dim */
-  --f-accent-bg:   rgba(192, 112, 80, .08);
+  /* ── Accent — warm muted coral ── */
+  --f-accent:      #c07050;
+  --f-accent-soft: #d08868;
+  --f-accent-dim:  #8a5840;
+  --f-accent-bg:   #2a2018;
 
-  /* ── Status — warm muted ── */
-  --f-ok:          #5a9e7a;   /* connected — soft teal green */
-  --f-ok-bg:       #1a2420;
-  --f-warn:        #c0a050;   /* warning — warm amber */
-  --f-warn-bg:     #221e14;
-  --f-danger:      #b85050;   /* error — muted warm red */
-  --f-danger-bg:   #221616;
-  --f-info:        #7090a8;   /* info — dusty blue */
-  --f-info-bg:     rgba(112, 144, 168, .08);
+  /* ── Status ── */
+  --f-ok:          #6aaa88;
+  --f-ok-bg:       #1c2420;
+  --f-warn:        #c0a050;
+  --f-warn-bg:     #241e14;
+  --f-danger:      #c06060;
+  --f-danger-bg:   #241818;
+  --f-info:        #6898b0;
+  --f-info-bg:     #1c2028;
 
-  /* ── Text — warm cream, soft ── */
-  --f-text:        #d0c8c0;   /* primary — warm cream, not white */
-  --f-text-2:      #8a8078;   /* secondary — warm gray */
-  --f-text-3:      #605850;   /* muted */
-  --f-text-4:      #443e38;   /* disabled */
+  /* ── Text — warm, readable ── */
+  --f-text:        #c8c0b8;
+  --f-text-2:      #887e76;
+  --f-text-3:      #5e564e;
+  --f-text-4:      #403a34;
 
-  /* ── Borders — nearly invisible warm ── */
-  --f-border:      #2e2a26;   /* barely visible */
-  --f-border-sub:  #282420;   /* even more subtle */
-  --f-divider:     #343028;   /* section dividers */
+  /* ── Borders — same tone as bg, one shade up ── */
+  --f-border:      #2a2724;
+  --f-border-sub:  #242220;
+  --f-divider:     #302c28;
 
   /* ── Selection ── */
-  --f-select-bg:   rgba(192, 112, 80, .12);
-  --f-select-border: rgba(192, 112, 80, .25);
+  --f-select-bg:   rgba(192, 112, 80, .10);
+  --f-select-border: rgba(192, 112, 80, .22);
 
   /* ── Shadows ── */
-  --f-shadow-sm:   0 1px 2px rgba(0, 0, 0, .15);
-  --f-shadow-md:   0 2px 6px rgba(0, 0, 0, .18);
-  --f-shadow-lg:   0 4px 12px rgba(0, 0, 0, .22);
+  --f-shadow-sm:   0 1px 3px rgba(0, 0, 0, .20);
+  --f-shadow-md:   0 2px 8px rgba(0, 0, 0, .24);
+  --f-shadow-lg:   0 4px 16px rgba(0, 0, 0, .30);
 
   /* ── Radii ── */
   --f-radius-sm:   4px;
@@ -72,12 +72,12 @@
   --f-size-xl:     1.125rem;
   --f-size-2xl:    1.5rem;
 
-  /* ── Monaco Editor tokens — warm and soft ── */
-  --f-token-keyword:   #d48868;  /* keywords — warm coral */
-  --f-token-string:    #5a9e7a;  /* strings — soft green */
-  --f-token-number:    #c0a050;  /* numbers — warm amber */
-  --f-token-comment:   #605850;  /* comments — blends in */
-  --f-token-type:      #7090a8;  /* types — dusty blue */
-  --f-token-function:  #b090a8;  /* functions — warm mauve */
-  --f-token-operator:  #b85050;  /* operators — muted red */
+  /* ── Monaco tokens ── */
+  --f-token-keyword:   #d08868;
+  --f-token-string:    #6aaa88;
+  --f-token-number:    #c0a050;
+  --f-token-comment:   #5e564e;
+  --f-token-type:      #6898b0;
+  --f-token-function:  #b090a8;
+  --f-token-operator:  #c06060;
 }

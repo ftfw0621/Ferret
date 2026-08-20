@@ -11,7 +11,7 @@ ul { list-style: none; }
 body {
   min-height: 100vh;
   color: var(--f-text);
-  background: transparent;
+  background: var(--f-bg-deep);
   line-height: 1.5;
   font-family: var(--f-font-ui);
   font-size: var(--f-size-base);

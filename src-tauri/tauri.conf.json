@@ -10,7 +10,6 @@
     "beforeBuildCommand": "npm run build"
   },
   "app": {
-    "macOSPrivateApi": true,
     "windows": [
       {
         "title": "Ferret",
@@ -20,12 +19,7 @@
         "minHeight": 600,
         "resizable": true,
         "decorations": true,
-        "titleBarStyle": "Overlay",
-        "transparent": true,
-        "windowEffects": {
-          "effects": ["underWindowBackground"],
-          "state": "active"
-        }
+        "titleBarStyle": "Overlay"
       }
     ],
     "security": {

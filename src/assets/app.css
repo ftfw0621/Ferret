@@ -1,10 +1,21 @@
 .app-layout {
   display: grid;
-  grid-template-columns: 220px 1fr;
+  grid-template-columns: 220px 4px 1fr;
   height: 100vh;
   overflow: hidden;
 }
 .app-layout.sidebar-collapsed { grid-template-columns: 1fr; }
+
+.sidebar-resize-handle {
+  width: 4px;
+  cursor: col-resize;
+  background: transparent;
+  transition: background 0.15s;
+  z-index: 10;
+}
+.sidebar-resize-handle:hover {
+  background: var(--f-accent-dim);
+}
 
 .main-area {
   background: var(--f-bg-deep);
@@ -51,7 +62,7 @@
 .editor-results-split {
   flex: 1; display: flex; flex-direction: column; overflow: hidden; min-height: 0;
 }
-.editor-pane { flex: 0 0 45%; min-height: 80px; display: flex; overflow: hidden; }
+.editor-pane { min-height: 80px; display: flex; overflow: hidden; }
 .split-handle {
   height: 3px; background: var(--f-border); cursor: row-resize; flex-shrink: 0; position: relative;
 }

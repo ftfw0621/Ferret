@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import './assets/base.css'
 import './assets/app.css'
 import { useConnections } from './hooks/useConnections'
@@ -23,6 +23,9 @@ function App() {
   const [sql, setSql] = useState('')
   const [queryResult, setQueryResult] = useState<QueryResult | null>(null)
   const [isExecuting, setIsExecuting] = useState(false)
+  const [editorHeight, setEditorHeight] = useState(45) // percentage
+  const [sidebarWidth, setSidebarWidth] = useState(220) // pixels
+  const splitRef = useRef<HTMLDivElement>(null)
   const [sidebarVisible, setSidebarVisible] = useState(true)
 
   useEffect(() => {
@@ -74,23 +77,50 @@ function App() {
   const hasActiveConnection = activeConnection && activeStatus?.connected
 
   return (
-    <div className={`app-layout ${sidebarVisible ? '' : 'sidebar-collapsed'}`}>
+    <div
+      className={`app-layout ${sidebarVisible ? '' : 'sidebar-collapsed'}`}
+      style={sidebarVisible ? { gridTemplateColumns: `${sidebarWidth}px 4px 1fr` } : undefined}
+    >
       {sidebarVisible && (
-        <Sidebar
-          connections={connections}
-          statusMap={statusMap}
-          activeConnectionId={activeConnectionId}
-          schemasMap={schemasMap}
-          tablesMap={tablesMap}
-          columnsMap={columnsMap}
-          onAddClick={() => { setEditingConn(undefined); setModalOpen(true) }}
-          onConnect={connectTo}
-          onDisconnect={disconnectFrom}
-          onEdit={handleEditConnection}
-          onDelete={removeConnection}
-          onTableClick={handleTableClick}
-          onFetchColumns={fetchColumns}
-        />
+        <>
+          <Sidebar
+            connections={connections}
+            statusMap={statusMap}
+            activeConnectionId={activeConnectionId}
+            schemasMap={schemasMap}
+            tablesMap={tablesMap}
+            columnsMap={columnsMap}
+            onAddClick={() => { setEditingConn(undefined); setModalOpen(true) }}
+            onConnect={connectTo}
+            onDisconnect={disconnectFrom}
+            onEdit={handleEditConnection}
+            onDelete={removeConnection}
+            onTableClick={handleTableClick}
+            onFetchColumns={fetchColumns}
+          />
+          <div
+            className="sidebar-resize-handle"
+            onMouseDown={(e) => {
+              e.preventDefault()
+              const startX = e.clientX
+              const startWidth = sidebarWidth
+              const onMouseMove = (ev: MouseEvent) => {
+                const delta = ev.clientX - startX
+                setSidebarWidth(Math.min(Math.max(startWidth + delta, 140), 500))
+              }
+              const onMouseUp = () => {
+                document.removeEventListener('mousemove', onMouseMove)
+                document.removeEventListener('mouseup', onMouseUp)
+                document.body.style.cursor = ''
+                document.body.style.userSelect = ''
+              }
+              document.body.style.cursor = 'col-resize'
+              document.body.style.userSelect = 'none'
+              document.addEventListener('mousemove', onMouseMove)
+              document.addEventListener('mouseup', onMouseUp)
+            }}
+          />
+        </>
       )}
 
       <main className="main-area">
@@ -102,11 +132,37 @@ function App() {
                 Query 1
               </div>
             </div>
-            <div className="editor-results-split">
-              <div className="editor-pane">
+            <div className="editor-results-split" ref={splitRef}>
+              <div className="editor-pane" style={{ flex: `0 0 ${editorHeight}%` }}>
                 <QueryEditor value={sql} onChange={setSql} onExecute={handleExecute} isExecuting={isExecuting} />
               </div>
-              <div className="split-handle" />
+              <div
+                className="split-handle"
+                onMouseDown={(e) => {
+                  e.preventDefault()
+                  const container = splitRef.current
+                  if (!container) return
+                  const startY = e.clientY
+                  const startHeight = editorHeight
+                  const containerHeight = container.getBoundingClientRect().height
+
+                  const onMouseMove = (ev: MouseEvent) => {
+                    const delta = ev.clientY - startY
+                    const pct = startHeight + (delta / containerHeight) * 100
+                    setEditorHeight(Math.min(Math.max(pct, 10), 90))
+                  }
+                  const onMouseUp = () => {
+                    document.removeEventListener('mousemove', onMouseMove)
+                    document.removeEventListener('mouseup', onMouseUp)
+                    document.body.style.cursor = ''
+                    document.body.style.userSelect = ''
+                  }
+                  document.body.style.cursor = 'row-resize'
+                  document.body.style.userSelect = 'none'
+                  document.addEventListener('mousemove', onMouseMove)
+                  document.addEventListener('mouseup', onMouseUp)
+                }}
+              />
               <div className="results-pane">
                 {queryResult && !queryResult.error && (
                   <div className="results-toolbar">

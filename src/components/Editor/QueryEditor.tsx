@@ -61,15 +61,33 @@ export function QueryEditor({ value, onChange, onExecute, onExplain, onCancel, i
   const onExecuteRef = useRef(onExecute)
   onExecuteRef.current = onExecute
 
-  /** Return selected text if any, otherwise the full editor content. */
+  /** Return selected text, or the single statement at the cursor. */
   const getExecutableSQL = useCallback((): string => {
     const editor = editorRef.current
     if (!editor) return value
+
+    // If text is selected, use the selection
     const selection = editor.getSelection()
     if (selection && !selection.isEmpty()) {
       return editor.getModel()?.getValueInRange(selection) ?? value
     }
-    return value
+
+    // No selection: find the ;-delimited statement at the cursor
+    const model = editor.getModel()
+    const position = editor.getPosition()
+    if (!model || !position) return value
+
+    const fullText = model.getValue()
+    const offset = model.getOffsetAt(position)
+
+    // Find statement boundaries around cursor
+    const before = fullText.lastIndexOf(';', offset - 1)
+    const start = before >= 0 ? before + 1 : 0
+    const after = fullText.indexOf(';', offset)
+    const end = after >= 0 ? after : fullText.length
+
+    const stmt = fullText.substring(start, end).trim()
+    return stmt || value
   }, [value])
 
   const handleMount: OnMount = useCallback((editor, monacoInstance) => {

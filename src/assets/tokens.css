@@ -5,13 +5,18 @@
  */
 
 :root {
-  /* ── Backgrounds — semi-transparent for macOS vibrancy ── */
-  --f-bg-deep:     rgba(24, 20, 18, .82);   /* main bg — shows vibrancy through */
-  --f-bg-surface:  rgba(30, 26, 24, .75);   /* sidebar, tab bar */
-  --f-bg-card:     rgba(36, 32, 28, .70);   /* cards, table header */
-  --f-bg-input:    rgba(20, 16, 14, .85);   /* editor bg */
-  --f-bg-hover:    rgba(44, 38, 34, .65);   /* hover */
-  --f-bg-active:   rgba(52, 44, 38, .60);   /* selected */
+  /* ── Backgrounds — warm dark chocolate ── */
+  --f-bg-deep:     #1e1a18;   /* main content — opaque */
+  --f-bg-surface:  #24201e;   /* tab bar, toolbars — opaque */
+  --f-bg-card:     #2a2624;   /* cards, table header */
+  --f-bg-input:    #1a1614;   /* editor bg */
+  --f-bg-hover:    #302c28;   /* hover */
+  --f-bg-active:   #38322c;   /* selected */
+
+  /* ── Sidebar — semi-transparent for vibrancy ── */
+  --f-sidebar-bg:  rgba(30, 26, 24, .65);
+  --f-sidebar-hover: rgba(44, 38, 34, .50);
+  --f-sidebar-active: rgba(52, 44, 38, .50);
 
   /* ── Accent — warm coral, desaturated ── */
   --f-accent:      #c07050;   /* primary — warm coral, not neon */

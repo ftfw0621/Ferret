@@ -6,7 +6,7 @@ import type { ConnectionConfig } from '../../lib/tauri'
 interface Props {
   isOpen: boolean
   onClose: () => void
-  onSave: (config: ConnectionConfig) => void
+  onSave: (config: ConnectionConfig) => Promise<void> | void
   onTest: (config: ConnectionConfig) => Promise<string>
   editingConnection?: ConnectionConfig
 }
@@ -91,9 +91,21 @@ export function ConnectionModal({ isOpen, onClose, onSave, onTest, editingConnec
     setTesting(false)
   }
 
-  const handleSave = () => {
-    onSave(buildConfig())
-    onClose()
+  const [saving, setSaving] = useState(false)
+  const [saveError, setSaveError] = useState<string | null>(null)
+
+  const handleSave = async () => {
+    setSaving(true)
+    setSaveError(null)
+    try {
+      await onSave(buildConfig())
+      onClose()
+    } catch (e) {
+      console.error('Save failed:', e)
+      setSaveError(String(e))
+    } finally {
+      setSaving(false)
+    }
   }
 
   if (!isOpen) return null
@@ -162,13 +174,20 @@ export function ConnectionModal({ isOpen, onClose, onSave, onTest, editingConnec
               {testResult.message}
             </div>
           )}
+          {saveError && (
+            <div className="test-result error">
+              ✕ Save failed: {saveError}
+            </div>
+          )}
         </div>
         <div className="modal-footer">
           <button className="btn btn-secondary" onClick={handleTest} disabled={testing}>
             {testing ? 'Testing…' : 'Test Connection'}
           </button>
           <button className="btn btn-secondary" onClick={onClose}>Cancel</button>
-          <button className="btn btn-primary" onClick={handleSave}>Save</button>
+          <button className="btn btn-primary" onClick={handleSave} disabled={saving}>
+            {saving ? 'Saving…' : 'Save'}
+          </button>
         </div>
       </div>
     </div>

@@ -3,7 +3,7 @@ use std::path::{Path, PathBuf};
 
 use super::types::ConnectionConfig;
 
-/// Stored connection (without password — password goes to keyring)
+/// Stored connection (password stored inline for now — TODO: migrate to Keychain)
 #[derive(serde::Serialize, serde::Deserialize)]
 #[serde(rename_all = "camelCase")]
 struct StoredConnection {
@@ -14,6 +14,8 @@ struct StoredConnection {
     port: u16,
     database: String,
     username: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    password: Option<String>,
     ssl_mode: super::types::SslMode,
     #[serde(skip_serializing_if = "Option::is_none")]
     color: Option<String>,
@@ -53,16 +55,15 @@ pub fn load_connections(config_dir: Option<&Path>) -> Vec<ConnectionConfig> {
     stored
         .into_iter()
         .map(|s| {
-            let password = load_password(&s.id);
             ConnectionConfig {
-                id: s.id,
+                id: s.id.clone(),
                 name: s.name,
                 driver_type: s.driver_type,
                 host: s.host,
                 port: s.port,
                 database: s.database,
                 username: s.username,
-                password,
+                password: s.password,
                 ssl_mode: s.ssl_mode,
                 color: s.color,
             }
@@ -89,12 +90,7 @@ pub fn save_connection(
         connections.push(config.clone());
     }
 
-    // Store password in keyring
-    if let Some(ref pw) = config.password {
-        store_password(&config.id, pw);
-    }
-
-    // Write connections without passwords
+    // Write connections (password stored inline for now)
     write_connections(&connections, &dir)
 }
 
@@ -109,7 +105,6 @@ pub fn delete_connection(id: &str, config_dir: Option<&Path>) -> Result<(), Stri
         .filter(|c| c.id != id)
         .collect();
 
-    delete_password(id);
     write_connections(&connections, &dir)
 }
 
@@ -144,6 +139,7 @@ fn write_connections(connections: &[ConnectionConfig], dir: &Path) -> Result<(),
             port: c.port,
             database: c.database.clone(),
             username: c.username.clone(),
+            password: c.password.clone(),
             ssl_mode: c.ssl_mode.clone(),
             color: c.color.clone(),
         })
@@ -154,46 +150,9 @@ fn write_connections(connections: &[ConnectionConfig], dir: &Path) -> Result<(),
     fs::write(config_file(dir), json).map_err(|e| format!("File write error: {e}"))
 }
 
-// Keyring helpers — passwords are stored per connection ID
-
-// Keyring is skipped in test mode to avoid macOS authorization prompts
-// and hanging. Passwords are only persisted via keyring in production.
-
-#[cfg(not(test))]
-fn keyring_entry(connection_id: &str) -> Option<keyring::Entry> {
-    keyring::Entry::new("com.ftfw.ferret", connection_id).ok()
-}
-
-#[cfg(not(test))]
-fn load_password(connection_id: &str) -> Option<String> {
-    keyring_entry(connection_id)
-        .and_then(|entry| entry.get_password().ok())
-}
-
-#[cfg(not(test))]
-fn store_password(connection_id: &str, password: &str) {
-    if let Some(entry) = keyring_entry(connection_id) {
-        let _ = entry.set_password(password);
-    }
-}
-
-#[cfg(not(test))]
-fn delete_password(connection_id: &str) {
-    if let Some(entry) = keyring_entry(connection_id) {
-        let _ = entry.delete_credential();
-    }
-}
-
-#[cfg(test)]
-fn load_password(_connection_id: &str) -> Option<String> {
-    None
-}
-
-#[cfg(test)]
-fn store_password(_connection_id: &str, _password: &str) {}
-
-#[cfg(test)]
-fn delete_password(_connection_id: &str) {}
+// TODO: Add macOS Keychain support for password storage.
+// Currently passwords are stored inline in the JSON file.
+// Keyring was removed because it blocks on macOS Keychain permission dialogs.
 
 #[cfg(test)]
 mod tests {
@@ -310,11 +269,11 @@ mod tests {
     }
 
     #[test]
-    fn test_password_not_in_file() {
+    fn test_password_persisted_in_file() {
         let dir = TempDir::new().unwrap();
         save_connection(&test_config("c1", "Test"), Some(dir.path())).unwrap();
 
-        let file_content = fs::read_to_string(config_file(dir.path())).unwrap();
-        assert!(!file_content.contains("testpass"), "Password should not be stored in JSON file");
+        let loaded = load_connections(Some(dir.path()));
+        assert_eq!(loaded[0].password, Some("testpass".to_string()));
     }
 }

@@ -41,6 +41,7 @@ export function ResultTable({ queryResult, isExecuting }: Props) {
       </div>
     )
   }
+  // No columns at all (e.g. INSERT/UPDATE/DELETE)
   if (queryResult.columns.length === 0) {
     return <div className="result-empty">Query executed — {queryResult.rowCount} row(s) affected</div>
   }
@@ -57,7 +58,13 @@ export function ResultTable({ queryResult, isExecuting }: Props) {
           </tr>
         </thead>
         <tbody>
-          {queryResult.rows.map((row, i) => (
+          {queryResult.rows.length === 0 ? (
+            <tr>
+              <td colSpan={queryResult.columns.length + 1} style={{ textAlign: 'center', color: 'var(--f-text-3)', padding: '2rem' }}>
+                No rows returned
+              </td>
+            </tr>
+          ) : queryResult.rows.map((row, i) => (
             <tr key={i}>
               <td className="row-num">{i + 1}</td>
               {queryResult.columns.map(col => {

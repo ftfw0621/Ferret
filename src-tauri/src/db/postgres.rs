@@ -160,26 +160,37 @@ impl DatabaseDriver for PostgresDriver {
             }
         };
 
-        match client.query(sql, &[]).await {
+        // Use prepare + query so we get column info even with 0 rows
+        let stmt = match client.prepare(sql).await {
+            Ok(s) => s,
+            Err(e) => {
+                return QueryResult {
+                    columns: vec![],
+                    rows: vec![],
+                    row_count: 0,
+                    duration_ms: start.elapsed().as_millis() as u64,
+                    error: Some(e.to_string()),
+                };
+            }
+        };
+
+        // Extract columns from the prepared statement (available even with 0 rows)
+        let columns: Vec<ColumnInfo> = stmt
+            .columns()
+            .iter()
+            .map(|col| {
+                let oid = col.type_().oid();
+                ColumnInfo {
+                    name: col.name().to_string(),
+                    data_type: oid_to_type_name(oid),
+                    category: oid_to_category(oid),
+                }
+            })
+            .collect();
+
+        match client.query(&stmt, &[]).await {
             Ok(rows) => {
                 let duration_ms = start.elapsed().as_millis() as u64;
-
-                let columns: Vec<ColumnInfo> = if let Some(first_row) = rows.first() {
-                    first_row
-                        .columns()
-                        .iter()
-                        .map(|col| {
-                            let oid = col.type_().oid();
-                            ColumnInfo {
-                                name: col.name().to_string(),
-                                data_type: oid_to_type_name(oid),
-                                category: oid_to_category(oid),
-                            }
-                        })
-                        .collect()
-                } else {
-                    vec![]
-                };
 
                 let json_rows: Vec<serde_json::Value> = rows
                     .iter()

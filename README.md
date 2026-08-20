@@ -2,59 +2,56 @@
 
 A beautiful macOS database client — PostgreSQL first, multi-DB ready.
 
-Built with Electron + TypeScript + React, featuring Monaco Editor for SQL editing and AG Grid for result display.
-
-## Features (V1 — In Development)
-
-- [ ] Connection management (save, edit, test multiple connections)
-- [ ] SQL editor with syntax highlighting (Monaco Editor)
-- [ ] Query execution with beautiful result tables (AG Grid)
-- [ ] Schema browser (databases → schemas → tables → columns)
-- [ ] PostgreSQL support via node-postgres
+Built with **Tauri** (Rust backend) + **React** (TypeScript frontend).
 
 ## Tech Stack
 
 | Layer | Technology |
 |-------|-----------|
-| Framework | Electron + electron-vite |
-| UI | React 19 + TypeScript |
-| SQL Editor | Monaco Editor |
-| Result Table | AG Grid Community |
-| DB Driver | node-postgres (pg) |
-| Build | Vite + electron-builder |
+| Backend | Rust + Tauri 2 |
+| DB Driver | tokio-postgres + deadpool |
+| Credentials | macOS Keychain (keyring crate) |
+| Frontend | React 19 + TypeScript + Vite |
+| Build | cargo + Vite → DMG |
 
 ## Development
 
 ```bash
-# Install dependencies
+# Install Rust (if needed)
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+cargo install tauri-cli
+
+# Install frontend deps
 npm install
 
-# Start dev mode
-npm run dev
+# Run in dev mode
+cargo tauri dev
+
+# Run Rust tests
+cd src-tauri && cargo test
 
 # Build for macOS
-npm run build:mac
+cargo tauri build
 ```
 
 ## Project Structure
 
 ```
-src/
-├── main/           # Electron main process
-├── preload/        # Context bridge (IPC)
-├── renderer/       # React UI
+├── src-tauri/           # Rust backend
 │   └── src/
-│       ├── assets/ # CSS tokens, styles
-│       └── components/
-├── shared/         # Types shared between processes
-└── drivers/        # Database driver abstraction
-    ├── interface.ts    # Driver protocol
-    └── postgres/       # PostgreSQL implementation
+│       ├── lib.rs       # App setup + command registration
+│       ├── commands.rs  # Tauri IPC command handlers
+│       └── db/
+│           ├── types.rs           # Shared types (ConnectionConfig, QueryResult, etc.)
+│           ├── postgres.rs        # PostgreSQL driver + connection string parser
+│           └── connection_store.rs # Persistence (JSON + Keychain)
+├── src/                 # React frontend
+│   ├── lib/tauri.ts     # Typed Tauri invoke wrapper
+│   ├── hooks/           # React state hooks
+│   ├── components/      # UI components
+│   └── assets/          # CSS design tokens
+└── index.html
 ```
-
-## Design
-
-Ferret's visual identity is inspired by [Mole](https://github.com/tw93/Mole)'s dark-theme aesthetic — a bright indigo-purple palette with dense, information-rich layout.
 
 ## License
 

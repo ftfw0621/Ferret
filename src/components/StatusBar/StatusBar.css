@@ -1,0 +1,16 @@
+.status-bar {
+  background: var(--f-bg-card);
+  border-top: 1px solid var(--f-border);
+  padding: 0.2rem 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  font-size: var(--f-size-xs);
+  color: var(--f-text-3);
+  flex-shrink: 0;
+}
+.status-item { display: flex; align-items: center; gap: 0.3rem; }
+.status-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--f-ok); }
+.status-dot.off { background: var(--f-text-4); }
+.status-sep { color: var(--f-text-4); }
+.status-right { margin-left: auto; display: flex; gap: 0.75rem; font-family: var(--f-font-mono); }

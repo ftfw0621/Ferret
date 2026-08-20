@@ -124,6 +124,23 @@
 .execute-spinner { display: inline-block; animation: spin 0.8s linear infinite; font-size: 0.7rem; }
 @keyframes spin { to { transform: rotate(360deg); } }
 .toolbar-hint { font-size: var(--f-size-xs); color: var(--f-text-4); font-family: var(--f-font-mono); }
+.explain-btn {
+  display: flex; align-items: center; gap: 0.3rem; padding: 0.25rem 0.6rem;
+  border-radius: var(--f-radius-sm); border: 1px solid var(--f-border); background: transparent;
+  color: var(--f-text-2); font-family: var(--f-font-ui); font-size: var(--f-size-xs);
+  font-weight: 500; cursor: pointer;
+}
+.explain-btn:hover:not(:disabled) { background: var(--f-bg-hover); color: var(--f-text); }
+.explain-btn:disabled { opacity: 0.45; cursor: not-allowed; }
+.explain-icon { font-size: 0.6rem; }
+.explain-toggle { display: flex; gap: 0; margin-left: auto; }
+.toggle-btn {
+  padding: 0.15rem 0.5rem; border: 1px solid var(--f-border); background: transparent;
+  color: var(--f-text-3); font-family: var(--f-font-ui); font-size: var(--f-size-xs); cursor: pointer;
+}
+.toggle-btn:first-child { border-radius: var(--f-radius-sm) 0 0 var(--f-radius-sm); }
+.toggle-btn:last-child { border-radius: 0 var(--f-radius-sm) var(--f-radius-sm) 0; border-left: none; }
+.toggle-btn.active { background: var(--f-accent); color: #faf9f5; border-color: var(--f-accent); }
 
 .query-editor { flex: 1; overflow: hidden; }
 

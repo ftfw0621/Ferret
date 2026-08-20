@@ -1,0 +1,104 @@
+.explain-view {
+  padding: 0.75rem;
+  overflow: auto;
+  height: 100%;
+  font-size: var(--f-size-sm);
+  color: var(--f-text-2);
+}
+.explain-summary {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding-bottom: 0.6rem;
+  border-bottom: 1px solid var(--f-border-sub);
+  margin-bottom: 0.6rem;
+  font-size: var(--f-size-xs);
+  color: var(--f-text-3);
+  font-family: var(--f-font-mono);
+}
+.explain-label {
+  font-weight: 600;
+  color: var(--f-text);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-family: var(--f-font-ui);
+}
+.explain-total {
+  color: var(--f-text);
+}
+.explain-sep { color: var(--f-text-4); }
+
+.explain-tree {
+  font-family: var(--f-font-mono);
+  font-size: var(--f-size-xs);
+}
+.explain-node {
+  position: relative;
+}
+.explain-card {
+  background: var(--f-bg-card);
+  border: 1px solid var(--f-border-sub);
+  border-radius: var(--f-radius-sm);
+  padding: 0.4rem 0.6rem;
+  margin-bottom: 0.3rem;
+}
+.explain-card:hover {
+  border-color: var(--f-border);
+}
+.explain-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+.explain-type {
+  font-weight: 600;
+  color: var(--f-text);
+}
+.explain-time {
+  font-weight: 600;
+  flex-shrink: 0;
+}
+.explain-bar-track {
+  height: 3px;
+  background: var(--f-border-sub);
+  border-radius: 2px;
+  margin: 0.25rem 0;
+  overflow: hidden;
+}
+.explain-bar-fill {
+  height: 100%;
+  border-radius: 2px;
+}
+.explain-metrics {
+  display: flex;
+  gap: 0.75rem;
+  color: var(--f-text-3);
+  font-size: 0.65rem;
+}
+.explain-pct {
+  margin-left: auto;
+  color: var(--f-text-4);
+}
+.explain-estimate {
+  color: var(--f-text-4);
+}
+.explain-estimate.warn {
+  color: var(--f-danger);
+  font-weight: 500;
+}
+.explain-extras {
+  margin-top: 0.2rem;
+  padding-top: 0.2rem;
+  border-top: 1px solid var(--f-border-sub);
+}
+.explain-extra {
+  color: var(--f-text-3);
+  font-size: 0.6rem;
+  line-height: 1.6;
+  word-break: break-all;
+}
+.explain-extra-key {
+  color: var(--f-text-4);
+  margin-right: 0.3rem;
+}

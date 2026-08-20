@@ -9,12 +9,15 @@ import { ResultTable } from './components/Results/ResultTable'
 import { StatusBar } from './components/StatusBar/StatusBar'
 import { ferret } from './lib/tauri'
 import type { ConnectionConfig, QueryResult } from './lib/tauri'
+import { ExplainView, parseExplainJson } from './components/Explain/ExplainView'
+import type { ExplainData } from './components/Explain/ExplainView'
 
 interface Tab {
   id: string
   title: string
   sql: string
   results: QueryResult[]
+  explainPlan: ExplainData | null
   isExecuting: boolean
   connectionId: string | null
 }
@@ -28,6 +31,7 @@ function createTab(connectionId: string | null, title?: string, sql?: string): T
     title: title || `Query ${tabCounter - 1}`,
     sql: sql || '',
     results: [],
+    explainPlan: null,
     isExecuting: false,
     connectionId,
   }
@@ -49,6 +53,7 @@ function App() {
   const [sidebarWidth, setSidebarWidth] = useState(220)
   const splitRef = useRef<HTMLDivElement>(null)
   const [sidebarVisible, setSidebarVisible] = useState(true)
+  const [explainMode, setExplainMode] = useState<'visual' | 'raw'>('visual')
 
   const activeTab = tabs.find(t => t.id === activeTabId) ?? null
 
@@ -125,19 +130,35 @@ function App() {
   const handleTableClick = useCallback(async (connectionId: string, schema: string, table: string) => {
     setActiveConnectionId(connectionId)
     const query = `SELECT * FROM "${schema}"."${table}" LIMIT 100;`
-    // Open in a new tab
-    const tab = createTab(connectionId, table, query)
-    setTabs(prev => [...prev, tab])
-    setActiveTabId(tab.id)
-    // Auto-execute
-    updateTab(tab.id, { isExecuting: true })
-    try {
-      const result = await ferret.executeQuery(connectionId, query)
-      updateTab(tab.id, { results: [result], isExecuting: false })
-    } catch {
-      updateTab(tab.id, { isExecuting: false })
+
+    // If there's an active tab, append to it; otherwise create one
+    if (activeTabId) {
+      setTabs(prev => prev.map(t => {
+        if (t.id !== activeTabId) return t
+        const newSql = t.sql.trim() ? `${t.sql.trim()}\n${query}` : query
+        return { ...t, sql: newSql }
+      }))
+      // Auto-execute the new query
+      updateTab(activeTabId, { isExecuting: true, explainPlan: null })
+      try {
+        const result = await ferret.executeQuery(connectionId, query.replace(';', ''))
+        updateTab(activeTabId, { results: [result], isExecuting: false })
+      } catch {
+        updateTab(activeTabId, { isExecuting: false })
+      }
+    } else {
+      const tab = createTab(connectionId, table, query)
+      setTabs(prev => [...prev, tab])
+      setActiveTabId(tab.id)
+      updateTab(tab.id, { isExecuting: true })
+      try {
+        const result = await ferret.executeQuery(connectionId, query.replace(';', ''))
+        updateTab(tab.id, { results: [result], isExecuting: false })
+      } catch {
+        updateTab(tab.id, { isExecuting: false })
+      }
     }
-  }, [setActiveConnectionId, updateTab])
+  }, [activeTabId, setActiveConnectionId, updateTab])
 
   const cancelledRef = useRef(false)
 
@@ -148,7 +169,7 @@ function App() {
     if (statements.length === 0) return
 
     cancelledRef.current = false
-    updateTab(activeTab.id, { isExecuting: true, results: [] })
+    updateTab(activeTab.id, { isExecuting: true, results: [], explainPlan: null })
     const results: QueryResult[] = []
     for (const stmt of statements) {
       if (cancelledRef.current) break
@@ -169,6 +190,31 @@ function App() {
     cancelledRef.current = true
     await ferret.cancelQuery()
   }, [])
+
+  const handleExplain = useCallback(async (sql: string) => {
+    if (!activeTab || !activeConnectionId || !sql.trim()) return
+    const stmt = sql.split(';')[0].trim()
+    if (!stmt) return
+
+    const explainSql = `EXPLAIN (ANALYZE, COSTS, BUFFERS, FORMAT JSON) ${stmt}`
+    cancelledRef.current = false
+    updateTab(activeTab.id, { isExecuting: true, results: [], explainPlan: null })
+    try {
+      const result = await ferret.executeQuery(activeConnectionId, explainSql)
+      const plan = parseExplainJson(result)
+      // Store both parsed plan and raw result for toggle
+      updateTab(activeTab.id, {
+        explainPlan: plan,
+        results: [result],
+        isExecuting: false,
+      })
+    } catch (err) {
+      updateTab(activeTab.id, {
+        results: [{ columns: [], rows: [], rowCount: 0, durationMs: 0, error: String(err) }],
+        isExecuting: false,
+      })
+    }
+  }, [activeTab, activeConnectionId, updateTab])
 
   const handleSqlChange = useCallback((sql: string) => {
     if (activeTabId) updateTab(activeTabId, { sql })
@@ -254,6 +300,7 @@ function App() {
                     value={activeTab.sql}
                     onChange={handleSqlChange}
                     onExecute={handleExecute}
+                    onExplain={handleExplain}
                     onCancel={handleCancel}
                     isExecuting={activeTab.isExecuting}
                   />
@@ -285,7 +332,28 @@ function App() {
                   }}
                 />
                 <div className="results-pane">
-                  {activeTab.results.length > 0 ? activeTab.results.map((result, i) => (
+                  {activeTab.explainPlan ? (
+                    <>
+                      <div className="results-toolbar">
+                        <span>Explain</span>
+                        <div className="explain-toggle">
+                          <button
+                            className={`toggle-btn ${explainMode === 'visual' ? 'active' : ''}`}
+                            onClick={() => setExplainMode('visual')}
+                          >Visual</button>
+                          <button
+                            className={`toggle-btn ${explainMode === 'raw' ? 'active' : ''}`}
+                            onClick={() => setExplainMode('raw')}
+                          >Raw</button>
+                        </div>
+                      </div>
+                      {explainMode === 'visual' ? (
+                        <ExplainView data={activeTab.explainPlan} />
+                      ) : (
+                        activeTab.results.map((r, i) => <ResultTable key={i} queryResult={r} isExecuting={false} />)
+                      )}
+                    </>
+                  ) : activeTab.results.length > 0 ? activeTab.results.map((result, i) => (
                     <div key={i}>
                       {!result.error && (
                         <div className="results-toolbar">

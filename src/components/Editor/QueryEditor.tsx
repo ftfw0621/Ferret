@@ -10,6 +10,7 @@ interface Props {
   value: string
   onChange: (value: string) => void
   onExecute: (sql: string) => void
+  onExplain?: (sql: string) => void
   onCancel?: () => void
   isExecuting?: boolean
 }
@@ -55,7 +56,7 @@ const FERRET_THEME: Monaco.editor.IStandaloneThemeData = {
   },
 }
 
-export function QueryEditor({ value, onChange, onExecute, onCancel, isExecuting }: Props) {
+export function QueryEditor({ value, onChange, onExecute, onExplain, onCancel, isExecuting }: Props) {
   const editorRef = useRef<Monaco.editor.IStandaloneCodeEditor | null>(null)
   const onExecuteRef = useRef(onExecute)
   onExecuteRef.current = onExecute
@@ -127,6 +128,17 @@ export function QueryEditor({ value, onChange, onExecute, onCancel, isExecuting 
           >
             <span className="execute-icon">▶</span>
             <span>Execute</span>
+          </button>
+        )}
+        {!isExecuting && onExplain && (
+          <button
+            className="explain-btn"
+            onClick={() => { const sql = getExecutableSQL(); if (sql.trim()) onExplain(sql) }}
+            disabled={!value.trim()}
+            title="Explain Analyze"
+          >
+            <span className="explain-icon">⊞</span>
+            <span>Explain</span>
           </button>
         )}
         <span className="toolbar-hint">⌘+Enter</span>
